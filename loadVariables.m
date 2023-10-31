@@ -1,5 +1,6 @@
 function loadVariables(opVar)
     global op;    
+    op.home_base = opVar.home_base
     op.targets = opVar.targets;
     op.obstacles = opVar.obstacles;
     op.n_nodes = opVar.n_nodes;
