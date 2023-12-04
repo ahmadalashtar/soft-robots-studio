@@ -92,7 +92,10 @@ function [pop, fit_array] = runBBBC(app, exp)
             fprintf('] = %.4f', mean(comD));
             message = message + "] = " + string(round(mean(comD),4));
             fprintf('\n');
-            sendOutputFromScript2GUI(app,message);
+
+            best_index = fit_array_P(1,4);
+            configurations = decodeIndividual(pop(:,:,best_index));
+            sendOutputFromScript2GUI(app,message,configurations);
         end
 
         %--SPECIAL CONVERGENCE CONDITIONS

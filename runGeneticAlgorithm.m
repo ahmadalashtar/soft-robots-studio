@@ -114,7 +114,9 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
 %                 fprintf(', Dynamic Mutation: %.4f', gas.mutation_probability);
 %             end
             fprintf('\n');
-            sendOutputFromScript2GUI(app,message);
+            best_index = fit_array_P(1,4);
+            configurations = decodeIndividual(pop(:,:,best_index));
+            sendOutputFromScript2GUI(app,message,configurations);
         end
       
 %         %--DRAW BEST INDIVIDUAL (DEBUG) 
