@@ -45,7 +45,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
     for gen=1:1:gas.generations
 
          % GUI
-        pause(0);
+        pause(0.01);
         if(app.stopRunItGeneric)
             return;
         end
@@ -166,11 +166,11 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
         end
     end
     for i=gas.n_individuals:-1:1
-        % GUI
-        pause(0);
-        if(app.stopRunItGeneric)
-            return;
-        end
+        % % GUI
+        % pause(0);
+        % if(app.stopRunItGeneric)
+        %     return;
+        % end
         % end GUI
         if(round(variance_array(i),2) > 0)
             gas.convergence00 = i-gas.variance_generations;

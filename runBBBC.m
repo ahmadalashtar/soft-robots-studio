@@ -22,7 +22,7 @@ function [pop, fit_array] = runBBBC(app, exp)
     %--ITERATIONS
     for gen=1:1:bbbcs.MAX_GENERATIONS
         % GUI
-        pause(0);
+        pause(0.01)
         if(app.stopRunItGeneric)
             return;
         end
