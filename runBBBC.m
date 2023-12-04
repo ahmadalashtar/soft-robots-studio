@@ -55,7 +55,7 @@ function [pop, fit_array] = runBBBC(app, exp)
         %--VERBOSE (SHOW LOG)
         if bbbcs.verbose
             fprintf('[%d.%d]\t', exp, gen);
-            message = "["+ exp + "." + gen + "]" + app.tabChar;
+            message = "["+  gen + "]" + app.tabChar;
             if fit_array(1,bbbcs.fitIdx.pen) == 0
                 fprintf('feas: ');
                 message = message + "feas: ";
@@ -65,35 +65,31 @@ function [pop, fit_array] = runBBBC(app, exp)
             end
             fprintf('IK %.3f ', fit_array(1,bbbcs.fitIdx.ik));
             fprintf('(1st P: %.3f-%.3f, #%d), ', bbbcs.rankingSettings.minFit, bbbcs.rankingSettings.minFit + bbbcs.rankingSettings.step_ik, bbbcs.rankingSettings.firstPartitionSize);
-            fprintf('LtS %d, ', fit_array(1,bbbcs.fitIdx.nodes));
-            fprintf('OND %d%%, ', fit_array(1,bbbcs.fitIdx.wiggly));
-            fprintf('LoS %d, ', fit_array(1,bbbcs.fitIdx.nodesOnSegment));
-            fprintf('Length %.3f', fit_array(1,bbbcs.fitIdx.totLength));
+            fprintf('Links to segment %d, ', fit_array(1,bbbcs.fitIdx.nodes));
+            fprintf('UND %d%%, ', fit_array(1,bbbcs.fitIdx.wiggly));
+            fprintf('Links on segment %d, ', fit_array(1,bbbcs.fitIdx.nodesOnSegment));
+            fprintf('Total length %.3f', fit_array(1,bbbcs.fitIdx.totLength));
             
             fprintf('\t\tDist from Center of Mass: [');
 
             message = message + " IK " + string(round(fit_array(1,bbbcs.fitIdx.ik),3)) + " ";
             message = message + "(1st P: " + string(round(bbbcs.rankingSettings.minFit,3)) + "-" + string(round(bbbcs.rankingSettings.minFit + bbbcs.rankingSettings.step_ik,3)) +", #" + string(bbbcs.rankingSettings.firstPartitionSize) + ") ";
-            message = message + "LtS " + fit_array(1,bbbcs.fitIdx.nodes) + ", ";
-            message = message + "OND " + fit_array(1,bbbcs.fitIdx.wiggly) + ", ";
-            message = message + "Los " + fit_array(1,bbbcs.fitIdx.nodesOnSegment) + ", ";
-            message = message + "Length "+string(round(fit_array(1,bbbcs.fitIdx.totLength),3)) + " ";
-            message = message + app.tabChar + app.tabChar + "Dist from Center of Mass: [";
+            message = message + "Links to segment " + fit_array(1,bbbcs.fitIdx.nodes) + ", ";
+            message = message + "UND " + fit_array(1,bbbcs.fitIdx.wiggly) + ", ";
+            message = message + "Links on segment " + fit_array(1,bbbcs.fitIdx.nodesOnSegment) + ", ";
+            message = message + "Total length "+string(round(fit_array(1,bbbcs.fitIdx.totLength),3)) + " ";
 
             for i=1:1:size(comD,2)
                 
                 fprintf('%.4f', comD(i));
-                message = message + string(round(comD(i),4));
                 if i~=size(comD,2)
                     fprintf(', ');
-                    message = message + ", ";
                 end
             end    
             fprintf('] = %.4f', mean(comD));
-            message = message + "] = " + string(round(mean(comD),4));
             fprintf('\n');
 
-            best_index = fit_array_P(1,4);
+            best_index = fit_array(1,bbbcs.fitIdx.id);
             configurations = decodeIndividual(pop(:,:,best_index));
             sendOutputFromScript2GUI(app,message,configurations);
         end
