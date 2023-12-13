@@ -11,11 +11,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
     global gas; % genetic algorithm settings
     
     %--INITIALIZATION 
-    variance_array= zeros(1,gas.n_individuals);
-    queue=zeros(1,gas.variance_generations);   % queue used to calculate the variance of the last 'variance_generations' generations best individuals
-    qIndex = 1;
-    variance = 0;
-    
+
     % in case a user decides to have an odd number of idividuals in the population...
     if mod(gas.n_individuals,2) ~= 0
         gas.n_individuals = gas.n_individuals + 1;
@@ -26,6 +22,11 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
         gas.n_individuals = 1;
     end
     
+    variance_array= zeros(1,gas.n_individuals);
+    queue=zeros(1,gas.variance_generations);   % queue used to calculate the variance of the last 'variance_generations' generations best individuals
+    qIndex = 1;
+    variance = 0;
+
     %---------------DYNAMIC MUTATION---------------
     dynamic_mutation = false;
     if gas.mutation_probability == -1.0

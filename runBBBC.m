@@ -9,15 +9,16 @@ function [pop, fit_array] = runBBBC(app, exp)
     cMass = zeros(n_targets+1,op.n_nodes+4);
 
     %--INITIALIZATION 
-    variance_array= zeros(1,bbbcs.N);
-    queue=zeros(1,bbbcs.variance_generations);   % queue used to calculate the variance of the last 'variance_generations' generations best individuals
-    qIndex = 1;
-    variance = 0;
-
+    
     % in case a funny user decides to have a negative number or zero for individuals in the population...
     if bbbcs.N <= 0
         bbbcs.N = 1;
     end
+
+    variance_array= zeros(1,bbbcs.N);
+    queue=zeros(1,bbbcs.variance_generations);   % queue used to calculate the variance of the last 'variance_generations' generations best individuals
+    qIndex = 1;
+    variance = 0;
 
     %--ITERATIONS
     for gen=1:1:bbbcs.MAX_GENERATIONS
