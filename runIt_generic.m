@@ -1,4 +1,3 @@
-
 % MAIN FUNCTION
 %
 % Optimization Problem defintion:
@@ -93,7 +92,7 @@ function [best_chrom, configurations] = runIt_generic(app)
     gas.rankingSettings.n_partitions = 0;       % OUTPUT overall number of partitions (delta/step_ik)
     gas.rankingSettings.firstPartitionSize = 0; % OUTPUT number of individuals falling in the first partition (best ones)
 
-    gas.draw_plot = false;  % if you set this to true, your computer will likely explode
+    gas.draw_plot = false;  
     gas.verbose = true;
     gas.normalize_weightDistance = true;    % deprecated
     gas.variance_generations = 10; 
@@ -145,7 +144,7 @@ function [best_chrom, configurations] = runIt_generic(app)
     bbbcs.rankingSettings.n_partitions = 0;       % OUTPUT overall number of partitions (delta/step_ik)
     bbbcs.rankingSettings.firstPartitionSize = 0; % OUTPUT number of individuals falling in the first partition (best ones)
 
-    bbbcs.draw_plot = false;  % if you set this to true, your computer will likely explode
+    bbbcs.draw_plot = false;  
     bbbcs.verbose = true;
     bbbcs.normalize_weightDistance = true;    % deprecated
     bbbcs.variance_generations = 10; 

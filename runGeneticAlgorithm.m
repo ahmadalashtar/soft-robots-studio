@@ -16,12 +16,12 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
     qIndex = 1;
     variance = 0;
     
-    % in case a funny user decides to have an odd number of idividuals in the population...
+    % in case a user decides to have an odd number of idividuals in the population...
     if mod(gas.n_individuals,2) ~= 0
         gas.n_individuals = gas.n_individuals + 1;
     end
     
-    % a funnier user...
+   
     if gas.n_individuals <= 0
         gas.n_individuals = 1;
     end
