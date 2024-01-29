@@ -10,6 +10,7 @@ sp.isSimulataneously = false;
 
 [solution, ~] =MP_searchAlgorithm_2D(sp);
 if isempty(solution)
+    result = [];
     return;
 end
 solution.g;
