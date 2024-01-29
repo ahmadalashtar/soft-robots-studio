@@ -6,7 +6,7 @@ function [solution, exapndedNodes] = MP_searchAlgorithm_2D(sp)
     root.path = sp.start_conf;
     fringe = PDQ('init');
     PDQ('add', fringe, {[root.f, root.g, root.h], root.path});
-    PDQ('setMaxSize', fringe, 10000);
+    PDQ('setMaxSize', fringe, 100000);
     set = java.util.HashSet;
     while ~PDQ('empty', fringe)
         [priority, path] = PDQ('poll', fringe);

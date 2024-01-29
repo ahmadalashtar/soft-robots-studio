@@ -46,7 +46,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
     for gen=1:1:gas.generations
 
          % GUI
-        pause(0.01);
+        pause(0.1);
         if(app.stopRunItGeneric)
             return;
         end
