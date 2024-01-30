@@ -36,8 +36,8 @@ function MP_softRobot_animation_2D(commands, home_base, drawPath, obstacles, axe
         axis(axes,"equal")
         xlabel(axes,'x');
         ylabel(axes,'y');
-        xlim(axes,[-600 600]);
-        ylim(axes,[-400 400]);
+        % xlim(axes,[-600 600]);
+        % ylim(axes,[-400 400]);
         plot(axes,home_base(1),home_base(2),'--gs','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','b'); %draw home
         startConf = MP_solveForwardKinematics2D(commands(:,:,1),home_base,false);
         endConf = MP_solveForwardKinematics2D(commands(: , : , end),home_base,false);
