@@ -6,7 +6,7 @@
 %
 % DISCLAIMER:
 % It must me updated to draw obstacles when we will add any in the future
-function MP_softRobot_animation_2D(commands, home_base, drawPath, obstacles, axes)
+function MP_softRobot_animation_2D(commands, home_base, drawPath, obstacles, axes,secondsToPause)
     % --- Example of commands, remove this piece of code for real usage ----
 %     commands = zeros(3,3,10);
 %     for i=1:1:10
@@ -29,8 +29,9 @@ function MP_softRobot_animation_2D(commands, home_base, drawPath, obstacles, axe
     
     n_obstacles = size(obstacles,1);
 
-    
+    disp(drawPath)
     for k=1:1:steps
+        pause(secondsToPause)
         cla(axes)
         hold(axes,"on");
         axis(axes,"equal")
