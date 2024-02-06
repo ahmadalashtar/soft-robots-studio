@@ -2,7 +2,7 @@ function [intersected_obstacles,j] = MP_collisionCheck_2D(conf,op)
 
     %these two lines are to deal with obstacles as if they are bigger to
     %avoid getting too close
-    op.obstacles(:, 3) = op.obstacles(:, 3) + 25;
+    % op.obstacles(:, 3) = op.obstacles(:, 3) + 25;
 %     op.obstacles(:, 5) = op.obstacles(:, 5) + 10;
    
     for ee=1:op.j
