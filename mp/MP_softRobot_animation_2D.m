@@ -29,13 +29,12 @@ function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles,
     
     n_obstacles = size(obstacles,1);
 
-    disp(drawPath)
     for k=1:1:steps
         pause(secondsToPause)
         cla(axes)
 
         drawTargetsObstaclesBaseinMP(app);
-        
+
         hold(axes,"on");
         axis(axes,"equal")
         xlabel(axes,'x');
