@@ -1,11 +1,10 @@
 function result = MP_Solution_2D()
 
 global sp;
+
 sp.j = size(sp.start_conf, 1);
 sp.goal_conf = sp.goals(1:sp.j, 1:2);
-sp.home_base = [0,0];
 sp.isSimulataneously = false;
-
 
 
 [solution, ~] =MP_searchAlgorithm_2D(sp);
