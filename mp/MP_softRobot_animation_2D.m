@@ -28,17 +28,14 @@ function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles,
     end_effectors = zeros(steps,2); % end effector array that will contain the coordinates of the end effector for each step of motion
     
     n_obstacles = size(obstacles,1);
-
+    hold(axes,"on");
     for k=1:1:steps
         pause(secondsToPause)
         cla(axes)
 
         drawTargetsObstaclesBaseinMP(app);
+        draw_segments(app,app.UIAxes2);
 
-        hold(axes,"on");
-        axis(axes,"equal")
-        xlabel(axes,'x');
-        ylabel(axes,'y');
         % xlim(axes,[-600 600]);
         % ylim(axes,[-400 400]);
         plot(axes,home_base(1),home_base(2),'--gs','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','b'); %draw home
