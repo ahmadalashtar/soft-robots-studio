@@ -62,7 +62,7 @@ function [pop, fit_array] = runBBBC(app, exp)
                 message = message + "feas: ";
             else
                 fprintf('unfs: ');
-                message = message + "feas: ";
+                message = message + "unfs: ";
             end
             fprintf('IK %.3f ', fit_array(1,bbbcs.fitIdx.ik));
             fprintf('(1st P: %.3f-%.3f, #%d), ', bbbcs.rankingSettings.minFit, bbbcs.rankingSettings.minFit + bbbcs.rankingSettings.step_ik, bbbcs.rankingSettings.firstPartitionSize);

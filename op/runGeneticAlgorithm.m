@@ -85,7 +85,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
                 message = message + "feas: ";
             else
                 fprintf('unfs: ');
-                message = message + "feas: ";
+                message = message + "unfs: ";
             end
             fprintf('IK %.3f ', fit_array_P(1,gas.fitIdx.ik));
             message = message + " IK " + string(round(fit_array_P(1,gas.fitIdx.ik),3)) + " ";
