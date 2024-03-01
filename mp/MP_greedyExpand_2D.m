@@ -8,6 +8,7 @@ function [children] = MP_greedyExpand_2D(node, searchProblem)
 
         [greedyChild, isValid] = steeringChild(node, searchProblem);
         if isValid == true
+            children = [];
             children = [children ; greedyChild];
         end
 
@@ -71,6 +72,16 @@ function [greedyChild, isValid] = steeringChild(node, searchProblem)
     child_conf = parent_conf;
     %%%%%%%%%%%%%%%%%%% edit configuration 
     child_conf(:, 1) = parent_conf(:, 1) + (sign(searchProblem.goal_conf(:, 1) - parent_conf(:, 1)) * searchProblem.stepSize(1));
+    
+
+    %%%rounding
+    for ConfCount = 1:searchProblem.j
+        if searchProblem.goal_conf(ConfCount, 1) > parent_conf(ConfCount, 1) && searchProblem.goal_conf(ConfCount, 1) < child_conf(ConfCount, 1)
+            child_conf(ConfCount,1) = searchProblem.goal_conf(ConfCount, 1);
+        elseif searchProblem.goal_conf(ConfCount, 1) < parent_conf(ConfCount, 1) && searchProblem.goal_conf(ConfCount, 1) > child_conf(ConfCount, 1)
+            child_conf(ConfCount,1) = searchProblem.goal_conf(ConfCount, 1);
+        end
+    end
 
     for r = 1 : searchProblem.j
         if child_conf(r, 2) < searchProblem.lengthMin
