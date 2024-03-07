@@ -20,4 +20,4 @@ Contant Info:
   <li>F. Stroppa (fabio.stroppa@khas.edu.tr)</li>
   <li>A. Alashtar (ahmadalashtar@stu.khas.edu.tr)</li>
    </ul>
-Reference: F. Stroppa. Design Optimizer for Planar Soft-Growing Robot Manipulators. In Elsevier Engineering Applications of Artificial Intelligence, Volume 130, 2024. (<a href="https://www.sciencedirect.com/science/article/pii/S0952197623018778">URL</a>URL) (<a href="https://arxiv.org/abs/2310.03374">ArXiv</a>)
+Reference: F. Stroppa. Design Optimizer for Planar Soft-Growing Robot Manipulators. In Elsevier Engineering Applications of Artificial Intelligence, Volume 130, 2024. (<a href="https://www.sciencedirect.com/science/article/pii/S0952197623018778">URL</a>) (<a href="https://arxiv.org/abs/2310.03374">ArXiv</a>)
