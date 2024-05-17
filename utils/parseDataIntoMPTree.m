@@ -1,4 +1,3 @@
-
 function parseDataIntoMPTree(app)
     delete(app.MPTree.Children)
     children = app.loadedData.saveVar.MPTreeChildren;
@@ -6,5 +5,5 @@ function parseDataIntoMPTree(app)
         uitreenode(app.MPTree,"Text",children(i).Text,"NodeData",children(i).NodeData);
     end
     app.MPTree.SelectedNodes = app.MPTree.Children(end);
-    MPTreeSelectionChanged(app,1);
+    %MPTreeSelection(app, 1) Another way to call private function
 end
