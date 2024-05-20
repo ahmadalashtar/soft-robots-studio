@@ -47,6 +47,10 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
 
          % GUI
         pause(0.1);
+        if (app.paused)
+            
+            return;
+        end
         if(app.stopRunItGeneric)
             return;
         end
