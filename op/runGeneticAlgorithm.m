@@ -24,13 +24,9 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
     
     variance_array= zeros(1,gas.n_individuals);
     queue=zeros(1,gas.variance_generations);   % queue used to calculate the variance of the last 'variance_generations' generations best individuals
-    if (app.holdNode ~= -10)
-        queue = app.holdNode;
-    end
+
     qIndex = 1;
-    if (app.genHold ~= -10 && mod(app.genHold,10) + 1 <= size(queue,2))
-        qIndex = mod(app.genHold,10) + 1;
-    end
+
     variance = 0;
 
     %---------------DYNAMIC MUTATION---------------
@@ -158,6 +154,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
                 if numel(app.OPTree.Children)>0
                     app.holdNode = pop;
                     app.genHold = gen;
+                    SelectChangerOutCall(app, 0);
                 end
                 return;
             end
@@ -169,6 +166,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
             if(app.stopRunItGeneric)
                 app.genHold = -10;
                 app.holdNode = -10;
+                app.paused = false;
                 return;
             end
             % end GUI
@@ -269,6 +267,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
                 if numel(app.OPTree.Children)>0
                     app.holdNode = pop;
                     app.genHold = gen;
+                    SelectChangerOutCall(app, 0);
                 end
                 return;
             end
