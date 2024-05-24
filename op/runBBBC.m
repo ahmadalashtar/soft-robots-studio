@@ -27,6 +27,9 @@ function [pop, fit_array] = runBBBC(app, exp)
         if(app.stopRunItGeneric)
             return;
         end
+        if (app.paused)
+            return;
+        end
         % end GUI
         if gen == 1  %--BIG BANG
             %--RANDOM INITIALIZATION - First Big Bang Phase
