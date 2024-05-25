@@ -7,6 +7,11 @@ Follow these steps to run the program:
 <li>Execute the program by running it. </li>
 </ol>
 
+Required Toolboxes
+<ul>
+  <li>Mapping Toolbox
+  <li>Symbolic Math Toolbox
+   </ul>
 
 Authors:
 <ul>
