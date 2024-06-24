@@ -15,7 +15,7 @@ function [chrom] = mutation(chrom)
         switch gas.mutation_method
             case 'random'
                 chrom = randomMutation();
-            case 'modifiedRandom'
+            case 'modifiedRandomMutation'
                 chrom = modifiedRandomMutation(chrom);
             case 'polynomial'
                 chrom = polynomialMutation(chrom);
@@ -64,7 +64,7 @@ function [chrom] = modifiedRandomMutation(chrom)
             if j==1
                 if op.first_angle.is_fixed==false
                     angle_bound= [chrom(i,j)-(max_perturbation/2) chrom(i,j)+(max_perturbation/2)] ;
-                    angle=getRandomAngleAvoidingObastacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
                     angle=max(min(bounds_angle(2),angle),bounds_angle(1));
                     chrom(i,j)=angle;
 %                    chrom(i,j)=op.first_angle.angle;% don't mutate
@@ -77,7 +77,7 @@ function [chrom] = modifiedRandomMutation(chrom)
                     chrom(i,j) = max(min(bounds_angle(2),chrom(i,j)),bounds_angle(1));
                 else
                     angle_bound= [chrom(i,j)-(max_perturbation/2) chrom(i,j)+(max_perturbation/2)] ;
-                    angle=getRandomAngleAvoidingObastacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
                     angle=max(min(bounds_angle(2),angle),bounds_angle(1));
                     chrom(i,j)=angle;
                 end
