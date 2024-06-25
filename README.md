@@ -9,8 +9,9 @@ Follow these steps to run the program:
 
 Required Toolboxes
 <ul>
-  <li>Mapping Toolbox
-  <li>Symbolic Math Toolbox
+  <li>Mapping Toolbox</li>
+  <li>Symbolic Math Toolbox</li>
+  <li>Fixed-Point Designer</li>
    </ul>
 
 Authors:
