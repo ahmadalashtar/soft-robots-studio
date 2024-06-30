@@ -9,8 +9,9 @@ Follow these steps to run the program:
 
 Required Toolboxes
 <ul>
-  <li>Mapping Toolbox
-  <li>Symbolic Math Toolbox
+  <li>Mapping Toolbox</li>
+  <li>Symbolic Math Toolbox</li>
+  <li>Fixed-Point Designer</li>
    </ul>
 
 Authors:
@@ -19,6 +20,9 @@ Authors:
   <li>K. Arar, R. O. Sayin (genetic operators)</li>
   <li>K. E. Yenin, K. K. Atalay (bbbc)</li>
   <li>A. Alashtar (GUI, wrapper)</li>
+  <li>E. Özen (GUI,wrapper)</li>
+  <li>E. Demirel (GUI,wrapper)</li>
+  <li>O. Nurcan (GUI,wrapper)</li>
   </ul>
 Contant Info:
 <ul>
