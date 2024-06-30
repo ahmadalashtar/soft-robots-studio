@@ -25,7 +25,7 @@ function mouseClickInMP(app, src)
             for to = 1 : numel(targetsAndBase(:,1))
                 if round(x,3) == round(targetsAndBase(to,1),3) && round(y,3) == round(targetsAndBase(to,2),3)
                     app.MPRunning = true;
-                    MP_softRobot_animation_2D(app,node.NodeData.paths{from}{to},node.NodeData.base, true, node.NodeData.obstacles, app.UIAxes2,secondsToPause)
+                        MP_softRobot_animation_2D(app,node.NodeData.paths{from}{to},node.NodeData.base, true, node.NodeData.obstacles, app.UIAxes2,secondsToPause)
                     break;
                 end
             end
@@ -33,7 +33,17 @@ function mouseClickInMP(app, src)
     end
 
     app.MPRunning = false;
-    toggleUI(app,"on",[app.Stop])
+    if app.genHold ~=10
+        toggleUI(app,"on",[app.Stop,app.Pauser])
+        buttons = findall(app.TabGroup2, 'Tag', 'robotPara');
+        for k = 1:length(buttons)
+            buttons(k).Enable = 'off';
+        end
+    else
+        toggleUI(app,"on",[app.Stop])
+    end
+
+    
     app.previousX = round(x,3);
     app.previousY = round(y,3);
 end
