@@ -34,7 +34,7 @@ function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles,
         cla(axes)
 
         drawTargetsObstaclesBaseinMP(app);
-        draw_segments(app,app.UIAxes2);
+        draw_segments_MP(app,app.UIAxes2,app.MPTree.SelectedNodes);
 
         % xlim(axes,[-600 600]);
         % ylim(axes,[-400 400]);
