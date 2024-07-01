@@ -29,24 +29,6 @@ function [children] = MP_FullExpand_2D(node, searchProblem)
 
     end
 
-    for r = row:searchProblem.j %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-           [child, isValid] = combineSteering(node, 0,  r, searchProblem);
-           if isValid == true
-               children = [children ; child];
-           end
-           [child, isValid] = combineSteering(node, 1,  r, searchProblem);
-           if isValid == true
-               children = [children ; child];
-           end
-%            [child, isValid] = combineSteering(node, 1,  r, searchProblem);
-%            if isValid == true
-%                children = [children ; child];
-%            end
-%            [child, isValid] = combineSteering(node, 0,  r, searchProblem);
-%            if isValid == true
-%                children = [children ; child];
-%            end
-    end
 end
 
 function [child, isValid] = doEversion(node, operation, searchProblem)
