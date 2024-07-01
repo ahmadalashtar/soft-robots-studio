@@ -21,8 +21,8 @@ Authors:
   <li>K. E. Yenin, K. K. Atalay (bbbc)</li>
   <li>A. Alashtar (GUI, wrapper)</li>
   <li>E. Özen (GUI,wrapper)</li>
-  <li>E. Demirel (GUI,wrapper)</li>
-  <li>O. Nurcan (GUI,wrapper)</li>
+  <li>E. Demirel (GUI, wrapper)</li>
+  <li>O. Nurcan (GUI, wrapper)</li>
   </ul>
 Contant Info:
 <ul>
