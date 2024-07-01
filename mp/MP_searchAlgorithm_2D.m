@@ -1,62 +1,105 @@
-function [solution, exapndedNodes, times] = MP_searchAlgorithm_2D(sp)
+function [solution, expandedNodes, times] = MP_searchAlgorithm_2D(sp, retraction)
     times.fringe = 0;
     times.greedy = 0;
     times.fullExpand = 0;
-    exapndedNodes = 0;
-    root.g = 0;
-    root.h = MP_getHeuristic_2D(sp.typeOfHeuristic, sp.start_conf, sp);
-    root.f = MP_calculateCostBasedOnAlgorithm(root.g, root.h, sp.typeOfAlg);
-    root.path = sp.start_conf;
-    fringe = PDQ('init');
-    PDQ('add', fringe, {[root.f, root.g, root.h], root.path});
-    PDQ('setMaxSize', fringe, 100000);
-    set = java.util.HashSet;
-    while ~PDQ('empty', fringe)
+
+    expandedNodes = 0;
+
+    instanceId = PDQ("init", 100000);
+
+    % PDQ_test("insertAny", instanceId, root.path, [root.g, root.h, root.f]);
+
+    initialPath = {};
+    costs = [];
+
+    if retraction
+        tempSolution = MP_pathToRetraction2D(sp);
+        if (~isempty(tempSolution))
+            path = tempSolution.path;
+            tempSolution.h = MP_getHeuristic_2D(sp.typeOfHeuristic, path(:, end-1:end), sp);
+            tempSolution.f = MP_calculateCostBasedOnAlgorithm(tempSolution.g, tempSolution.h, sp.typeOfAlg);
+            costs = [tempSolution.g, tempSolution.h, tempSolution.f];
+        else
+            root.g = 0;
+            root.h = MP_getHeuristic_2D(sp.typeOfHeuristic, sp.start_conf, sp);
+            root.f = MP_calculateCostBasedOnAlgorithm(root.g, root.h, sp.typeOfAlg);
+            root.path = sp.start_conf;
+
+            path = root.path;
+            costs = [root.g, root.h, root.f];
+        end
+    else
+        root.g = 0;
+        root.h = MP_getHeuristic_2D(sp.typeOfHeuristic, sp.start_conf, sp);
+        root.f = MP_calculateCostBasedOnAlgorithm(root.g, root.h, sp.typeOfAlg);
+        root.path = sp.start_conf;
+        
+        path = root.path;
+        costs = [root.g, root.h, root.f];
+    end
+
+    for i = 1:2:((size(path, 2)) - 1)
+        initialPath(size(initialPath) + 1, 1) = {path(:, i:i+1)};
+    end
+
+    PDQ("insertPath", instanceId, initialPath, costs);
+    while ~(PDQ("size", instanceId) == 0)
         tic
-        [priority, path] = PDQ('poll', fringe);
-        fringeNode.f = priority(1);
-        fringeNode.g = priority(2);
-        fringeNode.h = priority(3);
-        fringeNode.path = path;
-        set.add(mat2str(fringeNode.path(:,end-1:end)));
+        [config, costs] = PDQ("peek", instanceId);
+        fringeNode.g = costs(1);
+        fringeNode.h = costs(2);
+        fringeNode.f = costs(3);
+        fringeNode.path = config;
+            
         time = toc;
         times.fringe = times.fringe + time;
         tic
-        exapndedNodes = exapndedNodes +1;
+    
+        expandedNodes = expandedNodes + 1;
         if(fringeNode.h < 1)
             if size(sp.goals, 1) ~= 0
                 sp.goals(1:sp.j, :) = [];
             end
             if size(sp.goals, 1) == 0
-                solution = fringeNode;
+                tic
+                [path, costs] = PDQ("extractHead", instanceId);
+                solution.path = [];
+                for config = path
+                    solution.path = [solution.path, config{1}];
+          
+                    solution.g = costs(1);
+                    solution.h = costs(2);
+                    solution.f = costs(3);
+                end
+                time = toc;
+                times.fringe = times.fringe + time;
+                tic
                 break;
             else 
-%                PDQ('clear', fringe);
-%                set.clear;
-%                sp.goal_conf = sp.goals(1:sp.j, 1:2);
-%                fringeNode.h = MP_getHeuristic_2D(sp.typeOfHeuristic, sp.start_conf, sp);
+%                 PDQ('clear', fringe);
+%                 set.clear;
+%                 sp.goal_conf = sp.goals(1:sp.j, 1:2);
+%                 fringeNode.h = MP_getHeuristic_2D(sp.typeOfHeuristic, sp.start_conf, sp);
             end
         end
+
+        nextChildren = {};
+        
         [greedyChildren] = MP_greedyExpand_2D(fringeNode, sp);
         validGreedyFound = false;
         for i = 1 :size(greedyChildren, 1)
             child = greedyChildren(i);
-            [isColliding, ~] = MP_collisionCheck_2D(child.path(:,end-1:end), sp);
-            time = toc;
-            times.greedy = times.greedy + time;
-            tic
-            if ~set.contains(mat2str(child.path(:,end-1:end)))
-                if isColliding == false
-                    validGreedyFound = true;
-                    PDQ('add', fringe, {[child.f child.g child.h], child.path});
-                    set.add(mat2str(child.path(:,end-1:end)));
-                else
-                    set.add(mat2str(child.path(:,end-1:end)));
-                end
+            child.path = child.path(:, end-1:end);
+            [isColliding, ~] = MP_collisionCheck_2D(child.path, sp);
+            if isColliding == false
+                childCosts = [child.g, child.h, child.f];
+                childConfig = [child.path];
+                nextChildren(size(nextChildren, 1) + 1, 1) = {{child.path, [child.g, child.h, child.f]}};
+
+                validGreedyFound = true;
+            else
+                PDQ("addInvalidConfig", instanceId, child.path);
             end
-            time = toc;
-            times.fringe = times.fringe + time;
-            tic
         end
         time = toc;
         times.greedy = times.greedy + time;
@@ -64,37 +107,33 @@ function [solution, exapndedNodes, times] = MP_searchAlgorithm_2D(sp)
         if validGreedyFound == false
             children = MP_FullExpand_2D(fringeNode, sp);
             for i = 1 :size(children, 1)
-                child = children(i);
-                [isColliding, ~] = MP_collisionCheck_2D(child.path(:,end-1:end), sp);
-                time = toc;
-                times.fullExpand = times.fullExpand + time;
-                tic
-                if ~set.contains(mat2str(child.path(:,end-1:end)))
-                     if isColliding == false
-                        PDQ('add', fringe, {[child.f child.g child.h], child.path});
-                        set.add(mat2str(child.path(:,end-1:end)));
-                    else
-                        set.add(mat2str(child.path(:,end-1:end)));
-                    end
+                 child = children(i);
+                 child.path = child.path(:, end-1:end);
+                 [isColliding, ~] = MP_collisionCheck_2D(child.path, sp);
+                 if isColliding == false
+                    nextChildren(size(nextChildren, 1) + 1, 1) = {{child.path, [child.g, child.h, child.f]}};
+                else
+                    PDQ("addInvalidConfig", instanceId, child.path);
                 end
-                time = toc;
-                times.fringe = times.fringe + time;
-                tic
             end
             time = toc;
             times.fullExpand = times.fullExpand + time;
             tic
         end
-        if PDQ('empty', fringe)
+        
+        tic
+        PDQ("expandHead", instanceId, nextChildren);
+        time = toc;
+        times.fringe = times.fringe + time;
+        if PDQ("size", instanceId) == 0
             disp('no path found');
             solution = [];
         end
     end
     tic
-    PDQ('delete', fringe);
+    PDQ("destroyAll");
     time = toc;
     times.fringe = times.fringe + time;
     times.total = times.fringe + times.greedy + times.fullExpand;
 end
-
 

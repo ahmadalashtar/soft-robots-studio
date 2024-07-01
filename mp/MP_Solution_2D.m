@@ -6,8 +6,12 @@ sp.j = size(sp.start_conf, 1);
 sp.goal_conf = sp.goals(1:sp.j, 1:2);
 sp.isSimulataneously = false;
 
+startTime = clock;
+[solution, ~, times] = MP_searchAlgorithm_2D(sp);
+endTime = clock;
 
-[solution, ~] =MP_searchAlgorithm_2D(sp);
+totalTime = endTime - startTime;
+
 if isempty(solution)
     result = [];
     return;

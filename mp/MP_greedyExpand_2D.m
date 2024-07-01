@@ -72,9 +72,7 @@ function [greedyChild, isValid] = steeringChild(node, searchProblem)
     child_conf = parent_conf;
     %%%%%%%%%%%%%%%%%%% edit configuration 
     child_conf(:, 1) = parent_conf(:, 1) + (sign(searchProblem.goal_conf(:, 1) - parent_conf(:, 1)) * searchProblem.stepSize(1));
-    
 
-    %%%rounding
     for ConfCount = 1:searchProblem.j
         if searchProblem.goal_conf(ConfCount, 1) > parent_conf(ConfCount, 1) && searchProblem.goal_conf(ConfCount, 1) < child_conf(ConfCount, 1)
             child_conf(ConfCount,1) = searchProblem.goal_conf(ConfCount, 1);
