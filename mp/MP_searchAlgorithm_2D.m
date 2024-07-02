@@ -14,6 +14,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithm_2D(sp, retraction
 
     if retraction
         tempSolution = MP_pathToRetraction2D(sp);
+        solution = tempSolution;
         if (~isempty(tempSolution))
             path = tempSolution.path;
             tempSolution.h = MP_getHeuristic_2D(sp.typeOfHeuristic, path(:, end-1:end), sp);
@@ -39,7 +40,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithm_2D(sp, retraction
     end
 
     for i = 1:2:((size(path, 2)) - 1)
-        initialPath(size(initialPath) + 1, 1) = {path(:, i:i+1)};
+        initialPath = [initialPath; {path(:, i:i+1)}];
     end
 
     PDQ("insertPath", instanceId, initialPath, costs);
@@ -71,6 +72,9 @@ function [solution, expandedNodes, times] = MP_searchAlgorithm_2D(sp, retraction
                     solution.h = costs(2);
                     solution.f = costs(3);
                 end
+
+                calculateTotalCost(path, sp.home_base);
+                
                 time = toc;
                 times.fringe = times.fringe + time;
                 tic

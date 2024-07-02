@@ -7,7 +7,7 @@ sp.goal_conf = sp.goals(1:sp.j, 1:2);
 sp.isSimulataneously = false;
 
 startTime = clock;
-[solution, ~, times] = MP_searchAlgorithm_2D(sp);
+[solution, ~, times] = MP_searchAlgorithm_2D(sp, true);
 endTime = clock;
 
 totalTime = endTime - startTime;

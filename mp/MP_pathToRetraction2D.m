@@ -8,140 +8,118 @@ function path = MP_pathToRetraction2D(sp)
     warning("off", "MATLAB:polyshape:boolOperationFailed")    
     warning("off", "MATLAB:polyshape:boundary3Points")    
 
-    curConfig = sp.start_conf;
+    [curConfig, targetConfig, retraction] = makeConfigsEqual(sp.start_conf, sp.goal_conf);
     homeBase = sp.home_base;
-    targetConfig = sp.goals;
     obstacles = sp.obstacles;
 
     targetPos = MP_solveForwardKinematics2D(targetConfig, homeBase, false);
     sourcePos = MP_solveForwardKinematics2D(curConfig, homeBase, false);
 
-    targetLastNoNan = zeros(1, 1);
-    for i = 2:size(targetPos, 1)
-        if isnan(targetPos(i, 1))
-           break; 
-        end
-        targetLastNoNan = i;
-    end
-    
-    sourceLastNoNan = zeros(1, 1);
-    for sourceIndex = 2:size(sourcePos, 1)
-        if isnan(sourcePos(i, 1))
-            break; 
-        end
-        sourceLastNoNan = i;
-    end
 
     path = [];
-    for sourceIndex = 1:sourceLastNoNan
-        path = [];
-        if (obstacleCheck(sourcePos(1:sourceIndex, :), ...
-            targetPos(1:min(sourceIndex, targetLastNoNan), :), ...
-            obstacles))
-            
+    for sourceIndex = 3:size(sourcePos, 1)
+        for obstacleIndex = 1:size(obstacles, 1)
+            if (obstacleCheck(sourcePos(sourceIndex - 1:sourceIndex, :), ...
+                    targetPos(sourceIndex - 1:sourceIndex, :), ...
+                    obstacles(obstacleIndex, :)))
 
-            % retAmount = retractionAmount(sourcePos(1:sourceIndex, :), targetPos(1:min(sourceIndex, targetLastNoNan), :), obstacles);
-            % 
-            % collidedIndex = sourceIndex - 1;
-            % goalConfig = curConfig;
-            % goalConfig(collidedIndex, 2) = goalConfig(collidedIndex, 2) - retAmount;
-            % goalConfig((collidedIndex + 1):end, :) = 0;
-            % sp.goals = goalConfig;
-            % sp.goal_conf = goalConfig;
-            % path = MP_searchAlgorithmTest_2D(sp, false);
-            % return;
+                retAmount = retractionAmount(sourcePos(sourceIndex - 1:sourceIndex, :), targetPos(sourceIndex - 1:sourceIndex, :), obstacles(obstacleIndex, :));
+                collidedIndex = sourceIndex - 1;
+                for i = (collidedIndex + 1):size(curConfig, 1)
+                    retAmount = retAmount + curConfig(i, 2);
+                end
+                if retraction > 0
+                    retAmount = retAmount + retraction;
+                end
+                
+                node.path = curConfig;
+                node.g = 0;
+                node.h = MP_getHeuristic_2D(sp.typeOfHeuristic, curConfig, sp);
+                node.f = MP_calculateCostBasedOnAlgorithm(node.g, node.h, sp.typeOfAlg);
+                path = evert(node, 1, sp, retAmount);
+                return;
 
-            validSourceIndex = sourceIndex - 2;
-
-            goalConfig = curConfig;
-            goalConfig((validSourceIndex + 1):end, :) = 0;
-            sp.goals = goalConfig;
-            sp.goal_conf = goalConfig;
-
-
-            path = MP_searchAlgorithm_2D(sp, false);
-            return;
+                % collidedIndex = sourceIndex - 1;
+                % goalConfig = curConfig;
+                % goalConfig(collidedIndex, 2) = goalConfig(collidedIndex, 2) - retAmount;
+                % goalConfig((collidedIndex + 1):end, :) = 0;
+                % sp.goal_conf = goalConfig;
+                % sp.goal_conf = goalConfig;
+                % path = MP_searchAlgorithmTest_2D(sp, false);
+                % return;
+                %
+                % validSourceIndex = sourceIndex - 2;
+                %
+                % goalConfig = curConfig;
+                % goalConfig((validSourceIndex + 1):end, :) = 0;
+                % sp.goal_conf = goalConfig;
+                % sp.goal_conf = goalConfig;
+                %
+                %
+                % path = MP_searchAlgorithmTest_2D(sp, false);
+                % return;
+            end
         end
-
-    %     sourcePoints = [];
-    %     for i = 1:sourceIndex
-    %         sourcePoints(size(sourcePoints, 1) + 1, :) = sourcePos(i, :);
-    %     end
-    % 
-    %     targetPoints = [];
-    %     targetLastIndex = min(targetLastNoNan, sourceIndex);
-    %     for i = targetLastIndex:-1:1
-    %         targetPoints(size(targetPoints, 1) + 1, :) = targetPos(i, :);
-    %     end
-    % 
-    %     areaToSearch = [sourcePoints; targetPoints; sourcePoints(1, :)];
-    %     areaPolygon = polyshape(areaToSearch);
-    % 
-    %     for o = 1:size(obstacles)
-    %         o = obstacles(o, :);
-    %         rad = o(3);
-    %         obstacleRectangle = [
-    %             o(1) - rad, o(2) - rad;
-    %             o(1) - rad, o(2) + rad;
-    %             o(1) + rad, o(2) + rad;
-    %             o(1) + rad, o(2) - rad;
-    %             ];
-    %         obstaclePolygon = polyshape(obstacleRectangle);
-    % 
-    %         if (overlaps(areaPolygon, obstaclePolygon))
-    %             validSourceIndex = sourceIndex - 2;                
-    %             goalConfig = curConfig;
-    %             goalConfig((validSourceIndex + 1):end, :) = 0;
-    %             sp.goals = goalConfig;
-    %             sp.goal_conf = goalConfig;
-    % 
-    %             path = MP_searchAlgorithmTest_2D(sp, false);
-    %             return;
-    %         end
-    %     end
     end
 end
 
-function retractionAmount = retractionAmount(startPos, targetPos, obstacles)
+function retractionAmount = retractionAmount(startPos, targetPos, obstacle)
     firstJointPos = startPos(size(startPos, 1) - 1, :);
     lastJointPos = startPos(size(startPos), :);
 
-    eTol = 0.5;
+    targetFirstJoint = targetPos(size(startPos, 1) - 1, :);
+    targetLastJoint = targetPos(size(startPos), :);
+
+    eTol = 0.1;
     diff = sqrt((firstJointPos(1, 1) - lastJointPos(1, 1))^2 + ...
         (firstJointPos(1, 2) - lastJointPos(1, 2))^2);
 
-    while diff > eTol
-        firstJointPos = startPos(size(startPos, 1) - 1, :);
-        lastJointPos = startPos(size(startPos), :);
+    firstJoint = firstJointPos;
+    lastJoint = lastJointPos;
 
-        x0 = firstJointPos(1, 1);
-        y0 = firstJointPos(1, 2);
-        x1 = lastJointPos(1, 1);
-        y1 = lastJointPos(1, 2);
+    midPoint = lastJoint;
+    while diff > eTol
+        x0 = firstJoint(1, 1);
+        y0 = firstJoint(1, 2);
+        x1 = lastJoint(1, 1);
+        y1 = lastJoint(1, 2);
+
+        xT0 = targetFirstJoint(1, 1);
+        yT0 = targetFirstJoint(1, 2);
+        xT1 = targetLastJoint(1, 1);
+        yT1 = targetLastJoint(1, 2);
 
         midPoint = [
             min(x0, x1) + abs(x0 - x1) / 2, ...
             min(y0, y1) + abs(y0 - y1) / 2;
             ];
-
-        midPos = startPos;
-        midPos(size(midPos, 1), :) = midPoint;
-
-        if obstacleCheck(midPos, targetPos, obstacles)
-            startPos = midPos;
+        if obstacleCheck([firstJoint; lastJoint], [targetFirstJoint; targetLastJoint], obstacle)
+            lastJoint = midPoint;
             diff = diff / 2;
+
+            targetMidPoint = [
+                min(xT0, xT1) + abs(xT0 - xT1) / 2, ...
+                min(yT0, yT1) + abs(yT0 - yT1) / 2;
+            ];
+            targetLastJoint = targetMidPoint;
         else
-            targetPos = midPos;
+            firstJoint = midPoint;
             diff = diff / 2;
+
+            targetMidPoint = [
+                min(xT0, xT1) + 3 * abs(xT0 - xT1) / 2, ...
+                min(yT0, yT1) + 3 * abs(yT0 - yT1) / 2;
+                ];
+            targetLastJoint = targetMidPoint;
         end
     end
 
-    retractionAmount = sqrt((firstJointPos(1, 1) - midPoint(1))^2 + ...
-        (firstJointPos(1, 2) - midPoint(2))^2);
+    retractionAmount = sqrt((lastJointPos(1, 1) - midPoint(1, 1))^2 + ...
+        (lastJointPos(1, 2) - midPoint(1, 2))^2);
     return;
 end
 
-function isObstacle = obstacleCheck(startPos, targetPos, obstacles)
+function isObstacle = obstacleCheck(startPos, targetPos, obstacle)
     sourcePoints = [];
     for i = 1:size(startPos)
         sourcePoints(size(sourcePoints, 1) + 1, :) = startPos(i, :);
@@ -155,21 +133,22 @@ function isObstacle = obstacleCheck(startPos, targetPos, obstacles)
     areaToSearch = [sourcePoints; targetPoints; sourcePoints(1, :)];
     areaPolygon = polyshape(areaToSearch);
 
-    for o = 1:size(obstacles)
-        o = obstacles(o, :);
-        rad = o(3);
-        obstacleRectangle = [
-            o(1) - rad, o(2) - rad;
-            o(1) - rad, o(2) + rad;
-            o(1) + rad, o(2) + rad;
-            o(1) + rad, o(2) - rad;
-            ];
-        obstaclePolygon = polyshape(obstacleRectangle);
-        if overlaps(areaPolygon, obstaclePolygon)
-            isObstacle = true;
-            return;
-        end
+    o = obstacle;
+    rad = o(3);
+    obstacleRectangle = [
+        o(1) - rad, o(2) - rad;
+        o(1) - rad, o(2) + rad;
+        o(1) + rad, o(2) + rad;
+        o(1) + rad, o(2) - rad;
+        ];
+    obstaclePolygon = polyshape(obstacleRectangle);
+
+    if overlaps(areaPolygon, obstaclePolygon)
+        isObstacle = true;
+        return;
     end
+    
     isObstacle = false;
     return;
 end
+
