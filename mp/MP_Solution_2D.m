@@ -1,13 +1,13 @@
 function result = MP_Solution_2D()
 
-global sp;
+global sp
 
 sp.j = size(sp.start_conf, 1);
 sp.goal_conf = sp.goals(1:sp.j, 1:2);
 sp.isSimulataneously = false;
 
 startTime = clock;
-[solution, ~, times] = MP_searchAlgorithm_2D(sp, true);
+[solution, ~, times] = MP_searchAlgorithmV3(sp);
 endTime = clock;
 
 totalTime = endTime - startTime;

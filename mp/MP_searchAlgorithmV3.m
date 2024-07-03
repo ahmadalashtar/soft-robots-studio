@@ -36,7 +36,6 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
     
         expandedNodes = expandedNodes + 1;
 
-
         for i = 1:size(sp.obstacles, 1)
             length = validLength(MP_solveForwardKinematics2D(fringeNode.path, sp.home_base, false), sp.obstacles(i, :));
             if length < maxLength
@@ -101,12 +100,18 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
                 growthSp.start_conf = path{size(path, 2)};
                 growthSol = MP_searchAlgorithmTest_2D(growthSp, false);
 
+                if isempty(growthSol)
+                    solution = [];
+                    break;
+                end
+
                 growthPath = {};
                 for i = 1:2:size(growthSol.path, 2) - 1
                     growthPath = [growthPath, growthSol.path(:, i:i+1)];
                 end
 
                 path = [path, growthPath];
+
                 for config = path
                     solution.path = [solution.path, config{1}];
                 end
