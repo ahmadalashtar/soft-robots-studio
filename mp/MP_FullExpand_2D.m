@@ -211,5 +211,4 @@ function [child, isValid] = combineSteering(node, operationFirstCol,  row, searc
     child.h = MP_getHeuristic_2D(searchProblem.typeOfHeuristic, conf, searchProblem);
     child.f = MP_calculateCostBasedOnAlgorithm(child.g, child.h, searchProblem.typeOfAlg);
     child.path = [node.path , conf];
-
 end
