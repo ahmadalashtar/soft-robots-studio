@@ -29,24 +29,6 @@ function [children] = MP_FullExpand_2D(node, searchProblem)
 
     end
 
-    for r = row:searchProblem.j %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-           [child, isValid] = combineSteering(node, 0,  r, searchProblem);
-           if isValid == true
-               children = [children ; child];
-           end
-           [child, isValid] = combineSteering(node, 1,  r, searchProblem);
-           if isValid == true
-               children = [children ; child];
-           end
-%            [child, isValid] = combineSteering(node, 1,  r, searchProblem);
-%            if isValid == true
-%                children = [children ; child];
-%            end
-%            [child, isValid] = combineSteering(node, 0,  r, searchProblem);
-%            if isValid == true
-%                children = [children ; child];
-%            end
-    end
 end
 
 function [child, isValid] = doEversion(node, operation, searchProblem)
@@ -129,6 +111,12 @@ function [child, isValid] = doSteering(node, operation, row, searchProblem)
     % ---- generate new configuration ----
   
     conf = node.path(:,end-1:end);
+    parent = conf;
+
+% % debugging specific tes case 
+%     if round(conf(2, 1)) == round(27.6818) && round(conf(3,1)) == round(20.8692) && round(conf(4,1)) == round(-22.6886)
+%         conf;
+%     end
     if conf(row,1) == searchProblem.steerBounds(1) && operation ==1  || conf(row, 1) == searchProblem.steerBounds(2) && operation ==0
         child=[];
         isValid = false;
@@ -141,32 +129,39 @@ function [child, isValid] = doSteering(node, operation, row, searchProblem)
         return;
     end
     if(operation == 0)
-        conf(row, 1) = conf(row, 1) + searchProblem.stepSize(1, 1);
+        if round(conf(row, 1)) == round(19.6818)
+            conf(row,1);
+        end
+        if abs(parent(row, 1) - searchProblem.goal_conf(row, 1)) < searchProblem.stepSize(1)
+            conf(row, 1) = searchProblem.goal_conf(row, 1);
+        else
+            conf(row, 1) = conf(row, 1) + searchProblem.stepSize(1, 1);
+        end
         if conf(row, 1) > searchProblem.steerBounds(2)
             conf(row, 1) = searchProblem.steerBounds(2);
         end
+        %if we overshot and passed the goal, then set it to the goal
     else
-        conf(row, 1) = conf(row, 1) - searchProblem.stepSize(1, 1);
+        if abs(parent(row, 1) - searchProblem.goal_conf(row, 1)) < searchProblem.stepSize(1)
+            conf(row, 1) = searchProblem.goal_conf(row, 1);
+        else
+            conf(row, 1) = conf(row, 1) - searchProblem.stepSize(1, 1);
+        end
         if conf(row, 1) < searchProblem.steerBounds(1)
             conf(row, 1) = searchProblem.steerBounds(1);
         end
+        %if we overshot and passed the goal, then set it to the goal
+
     end
-%     if col == 1
-        if operation == 0
-            child.label = "a" + row + "+";
-        else
-            child.label = "a" + row + "-";
-        end
-%     else
-%         if operation == 0
-%             child.label = "b" + row + "+";
-%         else
-%             child.label = "b" + row + "-";
-%         end
-%     end
+
+    if operation == 0
+        child.label = "a" + row + "+";
+    else
+        child.label = "a" + row + "-";
+    end
+
     isValid = true;
     child.g = node.g + MP_calculateCost_2D(node.path(:,end-1:end), conf, searchProblem.home_base);
-%     child.h = calculateHeuristic(conf, searchProblem);
     child.h = MP_getHeuristic_2D(searchProblem.typeOfHeuristic, conf, searchProblem);
     child.f = MP_calculateCostBasedOnAlgorithm(child.g, child.h, searchProblem.typeOfAlg);
     child.path = [node.path , conf];
@@ -206,18 +201,6 @@ function [child, isValid] = combineSteering(node, operationFirstCol,  row, searc
             conf(row, 1) = searchProblem.steerBounds(1);
         end
     end
-
-%     if(operationSecondCol == 0)
-%         conf(row, 2) = conf(row, 2) + searchProblem.stepSize(1, 1);
-%         if conf(row, 2) > searchProblem.steerBounds(2)
-%             conf(row, 2) = searchProblem.steerBounds(2);
-%         end
-%     else
-%         conf(row, 2) = conf(row, 2) - searchProblem.stepSize(1, 1);
-%         if conf(row, 2) < searchProblem.steerBounds(1)
-%             conf(row, 2) = searchProblem.steerBounds(1);
-%         end
-%     end
     
     opArray = ['+' '-'];
     
@@ -228,5 +211,4 @@ function [child, isValid] = combineSteering(node, operationFirstCol,  row, searc
     child.h = MP_getHeuristic_2D(searchProblem.typeOfHeuristic, conf, searchProblem);
     child.f = MP_calculateCostBasedOnAlgorithm(child.g, child.h, searchProblem.typeOfAlg);
     child.path = [node.path , conf];
-
 end
