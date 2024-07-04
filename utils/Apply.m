@@ -9,10 +9,12 @@ function Apply(app)
     if selectedNode.Parent == app.TargetsNode
         % L = app.LengthEditField.Value;
         angle = app.AngledegEditField.Value ;
+        scaleHold = app.scaler;
         selectedNode.NodeData.length = 2;
         selectedNode.NodeData.angle = angle;
-        selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2));
-        ps = draw_target(app,x,y,angle,app.UIAxes1);
+        selectedNode.NodeData.currentScale = scaleHold;
+        selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2))  + ", current scale: " + string(round(scaleHold,2));
+        ps = draw_target(app,x,y,angle,app.UIAxes1, scaleHold);
         
     elseif selectedNode.Parent == app.ObstaclesNode
         radius = app.LengthEditField.Value;

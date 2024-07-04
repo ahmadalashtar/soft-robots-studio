@@ -1,4 +1,4 @@
-function create_polyshape(app,x,y,length,angle,target)
+function create_polyshape(app,x,y,length,angle,target, scaler)
             xLimits = app.UIAxes1.XLim;
                 
             yLimits = app.UIAxes1.YLim;
@@ -16,8 +16,8 @@ function create_polyshape(app,x,y,length,angle,target)
                 node = add_obstacle_node(app,ps,x,y,radius);
                 
             elseif target
-                ps = draw_target(app,x,y,angle,app.UIAxes1);
-                node = add_target_node(app,ps,x,y,length,angle);
+                ps = draw_target(app,x,y,angle,app.UIAxes1, scaler);
+                node = add_target_node(app,ps,x,y,length,angle, scaler);
             end
             ps.UserData = node;
             ps.FaceAlpha = 0.1;
