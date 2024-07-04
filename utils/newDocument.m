@@ -5,7 +5,9 @@ function newDocument(app)
     
     children = app.UIAxes1.Children;
     for i = 1:length(children)
-        delete(children(i).UserData)
+        if children(i).UserData ~= "MinMax"
+            delete(children(i).UserData)
+        end
         delete(children(i))
     end
 
