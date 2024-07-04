@@ -8,7 +8,7 @@ function Apply(app)
     selectedNode.NodeData.y=y;
     if selectedNode.Parent == app.TargetsNode
         % L = app.LengthEditField.Value;
-        angle = app.AngledegEditField.Value ;
+        angle = app.AngledegEditField.Value(1);
         selectedNode.NodeData.length = 2;
         selectedNode.NodeData.angle = angle;
         selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2));
@@ -20,7 +20,7 @@ function Apply(app)
         selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", radius: " + string(round(radius,2));
         ps = draw_obstacle(app,x,y,radius,app.UIAxes1);
     elseif selectedNode.Parent == app.BaseNode
-        angle = app.AngledegEditField.Value ;
+        angle = app.AngledegEditField.Value(1);
         selectedNode.NodeData.length = 1;
         selectedNode.NodeData.angle = angle;
         selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2));
