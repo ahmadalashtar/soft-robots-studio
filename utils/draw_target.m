@@ -25,5 +25,5 @@ function ps = draw_target(~, x, y, angle, axes,scaler)
     % Create the polyshape and rotate it
     shape = polyshape(star);
     shape = rotate(shape, angle, [x y]);
-    ps = plot(axes, shape, 'LineWidth', 1);
+    ps = plot(axes, shape, 'LineWidth', 1, "FaceColor", "blue");
 end
