@@ -1,31 +1,30 @@
 function ps_mouse_click(app,src)
-            if src.Selected == "off"
-                app.Tree.SelectedNodes = src.UserData;
-                node_click(app);
-            else
-                disable_properties(app);
-                src.Selected = "off";
-            end
-            if app.Eraser.State == "on"
+    if app.genHold == -10
+        if src.Selected == "off"
+            app.Tree.SelectedNodes = src.UserData;
+            node_click(app);
+        else
+            disable_properties(app);
+            src.Selected = "off";
+        end
+        if app.Eraser.State == "on"
 
-                if app.Tree.SelectedNodes.Parent == app.ObstaclesNode || app.Tree.SelectedNodes.Parent == app.TargetsNode
-                    if numel(app.OPTree.Children)>1
-                        result = confirmAction(app,'Editing',"Loss in Optimizer's Output Will Occur");
-                        if result  == "OK"
-                            delete(app.OPTree.Children);
-                        else
-                            return;
-                        end
-
+            if app.Tree.SelectedNodes.Parent == app.ObstaclesNode || app.Tree.SelectedNodes.Parent == app.TargetsNode
+                if numel(app.OPTree.Children)>1
+                    result = confirmAction(app,'Editing',"Loss in Optimizer's Output Will Occur");
+                    if result  == "OK"
+                        delete(app.OPTree.Children);
+                    else
+                        return;
                     end
-                    deleteSelected(app);
-                    app.lastSelected = app.BaseNode.Children(end).NodeData.child;
-                    % change cursor to arrow
-                     PointerOn(app,0);
 
                 end
+                deleteSelected(app);
+                app.lastSelected = app.BaseNode.Children(end).NodeData.child;
+                % change cursor to arrow
+                 PointerOn(app,0);
+
             end
-
-
-
         end
+    end
+end
