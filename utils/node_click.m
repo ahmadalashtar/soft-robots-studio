@@ -18,7 +18,9 @@ function node_click(app)
                     app.LengthEditFieldLabel.Text = "length";
                     app.LengthEditField.Enable="off";
                     app.LengthEditFieldLabel.Enable="off";
-                    enable_properties(app,"target")
+                    if app.genHold == -10
+                        enable_properties(app,"target")
+                    end
                 elseif selectedNodes.Parent == app.ObstaclesNode
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
@@ -26,7 +28,9 @@ function node_click(app)
                     app.LengthEditFieldLabel.Text = "radius";
                     app.AngledegEditField.Enable ="off";
                     app.AngledegEditFieldLabel.Enable ="off";
-                    enable_properties(app,"obstacle")
+                    if app.genHold == -10
+                        enable_properties(app,"obstacle")
+                    end
                 end
             else 
                 %  deselect 
