@@ -30,7 +30,7 @@ function Apply(app)
     end
     
     ps.UserData = selectedNode;
-    ps.FaceAlpha = 0.1;
+    %ps.FaceAlpha = 0.1;
     selectedNode.NodeData.child = ps;
     ps.ButtonDownFcn = @(src,event)ps_mouse_click(app,src);
     ps_mouse_click(app,ps);

@@ -20,7 +20,7 @@ function create_polyshape(app,x,y,length,angle,target, scaler)
                 node = add_target_node(app,ps,x,y,length,angle, scaler);
             end
             ps.UserData = node;
-            ps.FaceAlpha = 0.1;
+            %ps.FaceAlpha = 0.1;
             % ps.HitTest = "off";
             ps.ButtonDownFcn = @(src,event)ps_mouse_click(app,src);
             ps_mouse_click(app,ps);
