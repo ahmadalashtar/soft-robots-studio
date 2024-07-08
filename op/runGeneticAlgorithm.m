@@ -29,6 +29,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
 
     variance = 0;
 
+    feasible = false;
     %---------------DYNAMIC MUTATION---------------
     dynamic_mutation = false;
     if gas.mutation_probability == -1.0
@@ -86,12 +87,14 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
             if gas.verbose
                 fprintf('[%d.%d]\t', exp, gen);
                 message = "[" + gen + "]" + app.tabChar;
+
                 if fit_array_P(1,gas.fitIdx.pen) == 0
-                    fprintf('feas: ');
-                    message = message + "feas: ";
+                    feasible = true;
+                    fprintf('Feasible Solution: ');
+                    message = message + "Feasible Solution: ";
                 else
-                    fprintf('unfs: ');
-                    message = message + "unfs: ";
+                    fprintf('Unfeasible Solution: ');
+                    message = message + "Unfeasible Solution: ";
                 end
                 fprintf('IK %.3f ', fit_array_P(1,gas.fitIdx.ik));
                 message = message + " IK " + string(round(fit_array_P(1,gas.fitIdx.ik),3)) + " ";
@@ -119,7 +122,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
                 fprintf('\n');
                 best_index = fit_array_P(1,gas.fitIdx.id);
                 configurations = decodeIndividual(pop(:,:,best_index));
-                sendOutputFromScript2GUI(app,message,configurations);
+                sendOutputFromScript2GUI(app,message,configurations,feasible);
             end
           
     %         %--DRAW BEST INDIVIDUAL (DEBUG) 
@@ -199,12 +202,14 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
             if gas.verbose
                 fprintf('[%d.%d]\t', exp, gen);
                 message = "[" + gen + "]" + app.tabChar;
+
                 if fit_array_P(1,gas.fitIdx.pen) == 0
-                    fprintf('feas: ');
-                    message = message + "feas: ";
+                    feasible = true;
+                    fprintf('Feasible Solution: ');
+                    message = message + "Feasible Solution: ";
                 else
-                    fprintf('unfs: ');
-                    message = message + "unfs: ";
+                    fprintf('Unfeasible Solution: ');
+                    message = message + "Unfeasible Solution: ";
                 end
                 fprintf('IK %.3f ', fit_array_P(1,gas.fitIdx.ik));
                 message = message + " IK " + string(round(fit_array_P(1,gas.fitIdx.ik),3)) + " ";
@@ -232,7 +237,7 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
                 fprintf('\n');
                 best_index = fit_array_P(1,gas.fitIdx.id);
                 configurations = decodeIndividual(pop(:,:,best_index));
-                sendOutputFromScript2GUI(app,message,configurations);
+                sendOutputFromScript2GUI(app,message,configurations, feasible);
             end
           
     %         %--DRAW BEST INDIVIDUAL (DEBUG) 
