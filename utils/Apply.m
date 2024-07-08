@@ -16,7 +16,7 @@ function Apply(app)
         selectedNode.NodeData.currentScale = scaleHold;
         selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2))  + ", current scale: " + string(round(scaleHold,2));
         ps = draw_target(app,x,y,angle,app.UIAxes1, scaleHold);
-        ps.DataTipTemplate.DataTipRows(end)= t;
+        ps.DataTipTemplate.DataTipRows(end) = t;
         
     elseif selectedNode.Parent == app.ObstaclesNode
         radius = app.LengthEditField.Value;
@@ -32,7 +32,7 @@ function Apply(app)
     end
     
     ps.UserData = selectedNode;
-    ps.FaceAlpha = 0.1;
+    %ps.FaceAlpha = 0.1;
     selectedNode.NodeData.child = ps;
     ps.ButtonDownFcn = @(src,event)ps_mouse_click(app,src);
     ps_mouse_click(app,ps);

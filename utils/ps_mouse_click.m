@@ -22,7 +22,7 @@ function ps_mouse_click(app,src)
                     deleteSelected(app);
                     app.lastSelected = app.BaseNode.Children(end).NodeData.child;
                     % change cursor to arrow
-                     PointerOn(app,0);
+                    PointerOnCall(app,0);
 
                 end
             end
