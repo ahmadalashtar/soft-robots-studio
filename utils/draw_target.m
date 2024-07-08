@@ -1,4 +1,4 @@
-function ps = draw_target(~, x, y, angle, axes,scaler)
+function ps = draw_target(app, x, y, angle, axes,scaler)
     % Define the star coordinates as a matrix
     star = [cosd(90) sind(90)
             (1/3)*cosd(54) (1/3)*sind(54)
@@ -26,4 +26,7 @@ function ps = draw_target(~, x, y, angle, axes,scaler)
     shape = polyshape(star);
     shape = rotate(shape, angle, [x y]);
     ps = plot(axes, shape, 'LineWidth', 1, "FaceColor", "blue");
+    dt = datatip(ps, 1,1);
+    ps.DataTipTemplate.DataTipRows(end+1)="Target: "+ string(height(app.TargetsNode.Children)+1);
+    delete(dt);
 end

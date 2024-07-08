@@ -21,6 +21,9 @@ function node_click(app)
                     if app.genHold == -10
                         enable_properties(app,"target")
                     end
+                    if selectedNodes.Parent == app.TargetsNode && isempty(selectedNodes.NodeData.child.Children)
+                        datatip(selectedNodes.NodeData.child);            
+                    end
                 elseif selectedNodes.Parent == app.ObstaclesNode
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
