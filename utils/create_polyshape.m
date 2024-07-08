@@ -14,7 +14,6 @@ function create_polyshape(app,x,y,length,angle,target, scaler)
                 radius  = length;
                 ps = draw_obstacle(app,x,y,radius,app.UIAxes1);
                 node = add_obstacle_node(app,ps,x,y,radius);
-                
             elseif target
                 ps = draw_target(app,x,y,angle,app.UIAxes1, scaler);
                 node = add_target_node(app,ps,x,y,length,angle, scaler);

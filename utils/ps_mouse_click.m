@@ -5,6 +5,7 @@ function ps_mouse_click(app,src)
             else
                 disable_properties(app);
                 src.Selected = "off";
+                delete(src.Children);
             end
             if app.Eraser.State == "on"
 
