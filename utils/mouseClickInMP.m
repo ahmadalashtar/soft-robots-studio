@@ -33,14 +33,14 @@ function mouseClickInMP(app, src)
     end
 
     app.MPRunning = false;
-    if app.genHold ~=10
+    if app.genHold ~= -10
         toggleUI(app,"on",[app.Stop,app.Pauser])
         buttons = findall(app.TabGroup2, 'Tag', 'robotPara');
         for k = 1:length(buttons)
             buttons(k).Enable = 'off';
         end
     else
-        toggleUI(app,"on",[app.Stop])
+        toggleUI(app,"on",[app.Stop, app.Pauser, app.Continuar])
     end
 
     
