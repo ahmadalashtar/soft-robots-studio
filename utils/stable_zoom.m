@@ -10,7 +10,7 @@ function stable_zoom(app)
         delete(child);
         % L = app.LengthEditField.Value;
         angle = app.TargetsNode.Children(i).NodeData.angle;
-        scaleHold = app.scaler;
+        scaleHold = app.scalerOP;
         app.TargetsNode.Children(i).NodeData.length = 2;
         app.TargetsNode.Children(i).NodeData.angle = angle;
         app.TargetsNode.Children(i).NodeData.currentScale = scaleHold;
