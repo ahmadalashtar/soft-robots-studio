@@ -1,7 +1,9 @@
 function Apply(app)
     selectedNode = app.Tree.SelectedNodes;
     child = selectedNode.NodeData.child;
-    t = child.DataTipTemplate.DataTipRows(end);
+    if selectedNode.Parent == app.TargetsNode
+        t = child.DataTipTemplate.DataTipRows(end);
+    end
     delete(child);
     x = app.XcoordinateEditField.Value;
     y = app.YcoordinateEditField.Value;

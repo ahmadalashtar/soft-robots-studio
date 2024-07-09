@@ -31,7 +31,7 @@ function ps = draw_base(app,x,y,angle,axes)
     
     x_coor=[x_upper_left x_lower_left x_lower_right x_upper_right ];
     y_coor=[y_upper_left y_lower_left y_lower_right y_upper_right ];
-    if app.selectedTab == OptimizerTab
+    if app.selectedTab == app.OptimizerTab
         scale = sqrt(6) * app.scalerOP;
     else
         scale = sqrt(6) * app.scalerMP;
