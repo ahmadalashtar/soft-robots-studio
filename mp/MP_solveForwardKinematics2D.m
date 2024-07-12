@@ -43,9 +43,9 @@ function [robot_config_P] = MP_solveForwardKinematics2D(robot_config_AL, home_ba
         
         ee = [(ee(1)-node(1))*cos(alpha) - (ee(2)-node(2))*sin(alpha) , (ee(1)-node(1))*sin(alpha) + (ee(2)-node(2))*cos(alpha)]+node;  % apply rotation      
         if j == 1
-            zug = [cos(deg2rad(rotation_angle)), -sin(deg2rad(rotation_angle)); ...
+            rotateBy = [cos(deg2rad(rotation_angle)), -sin(deg2rad(rotation_angle)); ...
                  sin(deg2rad(rotation_angle)),  cos(deg2rad(rotation_angle))];
-            ee = (zug * ee')';
+            ee = (rotateBy * ee')';
         end
         
         % recalculation of the unit vector
