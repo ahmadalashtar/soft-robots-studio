@@ -10,8 +10,8 @@
 % 'cost' the cost, expressed as the sum of euclidean distances between each joint (including the end effector)
 function [cost] = MP_calculateCost_2D(conf_a, conf_b, home_base)
     j = size(conf_a,1);
-    conf_a_cc = MP_solveForwardKinematics2D(conf_a, home_base, false, 0);
-    conf_b_cc = MP_solveForwardKinematics2D(conf_b, home_base, false, 0);
+    conf_a_cc = MP_solveForwardKinematics2D(conf_a, home_base, false, home_base(3));
+    conf_b_cc = MP_solveForwardKinematics2D(conf_b, home_base, false, home_base(3));
    
     % find the index of the end effector
     ee_a = j;

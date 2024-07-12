@@ -37,7 +37,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
         expandedNodes = expandedNodes + 1;
 
         for i = 1:size(sp.obstacles, 1)
-            length = validLength(MP_solveForwardKinematics2D(fringeNode.path, sp.home_base, false, 0), sp.obstacles(i, :));
+            length = validLength(MP_solveForwardKinematics2D(fringeNode.path, sp.home_base, false, sp.home_base(3)), sp.obstacles(i, :));
             if length < maxLength
                 maxLength = length;
             end

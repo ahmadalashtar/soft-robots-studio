@@ -10,7 +10,7 @@ function [intersected_obstacles,j] = MP_collisionCheck_2D(conf,op)
             break
         end    
     end
-    xy = MP_solveForwardKinematics2D(conf, op.home_base, false, 0);
+    xy = MP_solveForwardKinematics2D(conf, op.home_base, false, op.home_base(3));
     intersected_obstacles = false;
     for j=1:1:ee %%might cause an error
         p_start = xy(j,:);
