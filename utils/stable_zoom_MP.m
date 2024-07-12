@@ -1,4 +1,5 @@
-function drawTargetsObstaclesBaseinMP(app)
+function stable_zoom_MP(app)
+    cla(app.UIAxes2);
     selectedNode = app.MPTree.SelectedNodes;
     % draw base
     ps = draw_base(app,selectedNode.NodeData.base(1), selectedNode.NodeData.base(2), selectedNode.NodeData.base(3),app.UIAxes2);
@@ -18,4 +19,5 @@ function drawTargetsObstaclesBaseinMP(app)
         ps.UserData =data;
         ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src);
     end
+    draw_segments_MP(app,app.UIAxes2,app.MPTree.SelectedNodes)
 end

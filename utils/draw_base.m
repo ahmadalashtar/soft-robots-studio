@@ -31,7 +31,11 @@ function ps = draw_base(app,x,y,angle,axes)
     
     x_coor=[x_upper_left x_lower_left x_lower_right x_upper_right ];
     y_coor=[y_upper_left y_lower_left y_lower_right y_upper_right ];
-    scale = sqrt(6) * app.scaler;
+    if app.selectedTab == app.OptimizerTab
+        scale = sqrt(6) * app.scalerOP;
+    else
+        scale = sqrt(6) * app.scalerMP;
+    end
     x_coor = x_coor * scale;
     y_coor = y_coor * scale;
     shape = polyshape(x_coor,y_coor);
