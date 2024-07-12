@@ -49,15 +49,15 @@ function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles,
         %draw the start configuration
         grayRobotColor = '#569c69';
         for i=2:1:n_joints+1
-            plot(axes,[startConf(i-1,1),startConf(i,1)],[startConf(i-1,2),startConf(i,2)],'-o','Color',grayRobotColor, 'LineWidth', 1.5);
+            plot(axes,[startConf(i-1,1),startConf(i,1)],[startConf(i-1,2),startConf(i,2)],'-o','Color',grayRobotColor, 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
 
         for i=2:1:n_joints+1
-            plot(axes,[endConf(i-1,1),endConf(i,1)],[endConf(i-1,2),endConf(i,2)],'-o','Color','b', 'LineWidth', 1.5);
+            plot(axes,[endConf(i-1,1),endConf(i,1)],[endConf(i-1,2),endConf(i,2)],'-o','Color','b', 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
         % draws the soft robot
         for i=2:1:n_joints+1
-            plot(axes,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color','r', 'LineWidth', 1.5);
+            plot(axes,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color','r', 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
         
         % draws the path from the end effector array

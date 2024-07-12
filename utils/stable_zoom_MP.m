@@ -1,6 +1,10 @@
 function stable_zoom_MP(app)
     if numel(app.UIAxes2.Children) > 0
-        cla(app.UIAxes2);
+        for i = size(app.UIAxes2.Children):-1:1
+            if ~strcmp(app.UIAxes2.Children(i).Tag, 'AnimPiece')
+                delete(app.UIAxes2.Children(i));
+            end
+        end
         selectedNode = app.MPTree.SelectedNodes;
         % draw base
         ps = draw_base(app,selectedNode.NodeData.base(1), selectedNode.NodeData.base(2), selectedNode.NodeData.base(3),app.UIAxes2);
@@ -20,6 +24,9 @@ function stable_zoom_MP(app)
             ps.UserData =data;
             ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src);
         end
+        % for i = 1:numel(currLines)
+        %     plot(app.UIAxes2,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color','r', 'LineWidth', 1.5);
+        % end
         draw_segments_MP(app,app.UIAxes2,app.MPTree.SelectedNodes)
     end
 end
