@@ -37,7 +37,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
         expandedNodes = expandedNodes + 1;
 
         for i = 1:size(sp.obstacles, 1)
-            length = validLength(MP_solveForwardKinematics2D(fringeNode.path, sp.home_base, false), sp.obstacles(i, :));
+            length = validLength(MP_solveForwardKinematics2D(fringeNode.path, sp.home_base, false, 0), sp.obstacles(i, :));
             if length < maxLength
                 maxLength = length;
             end
@@ -55,7 +55,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
                     path{i} = setConfigLength(path{i}, maxLength);
                 end
 
-                eversionAmount = validLength(MP_solveForwardKinematics2D(sp.start_conf, sp.home_base, false), [0, 0, 0]);
+                eversionAmount = validLength(MP_solveForwardKinematics2D(sp.start_conf, sp.home_base, false, 0), [0, 0, 0]);
                 eversionAmount = eversionAmount - maxLength;
                 node.path = sp.start_conf;
                 node.g = 0;
@@ -64,7 +64,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
                 pathInitial = evert(node, 1, sp, eversionAmount);
                 pathInitialArr = {};
 
-                eversionAmount = validLength(MP_solveForwardKinematics2D(sp.goal_conf, sp.home_base, false), [0, 0, 0]);
+                eversionAmount = validLength(MP_solveForwardKinematics2D(sp.goal_conf, sp.home_base, false, 0), [0, 0, 0]);
                 eversionAmount = eversionAmount - maxLength;
                 node.path = path{size(path, 2)};
                 node.g = costs(1);
