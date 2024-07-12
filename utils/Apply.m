@@ -12,7 +12,7 @@ function Apply(app)
     if selectedNode.Parent == app.TargetsNode
         % L = app.LengthEditField.Value;
         angle = app.AngledegEditField.Value ;
-        scaleHold = app.scaler;
+        scaleHold = app.scalerOP;
         selectedNode.NodeData.length = 2;
         selectedNode.NodeData.angle = angle;
         selectedNode.NodeData.currentScale = scaleHold;
