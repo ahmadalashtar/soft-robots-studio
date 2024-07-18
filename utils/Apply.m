@@ -1,6 +1,9 @@
 function Apply(app)
     selectedNode = app.Tree.SelectedNodes;
     child = selectedNode.NodeData.child;
+    if selectedNode.Parent == app.TargetsNode
+        t = child.DataTipTemplate.DataTipRows(end);
+    end
     delete(child);
     x = app.XcoordinateEditField.Value;
     y = app.YcoordinateEditField.Value;
@@ -8,11 +11,14 @@ function Apply(app)
     selectedNode.NodeData.y=y;
     if selectedNode.Parent == app.TargetsNode
         % L = app.LengthEditField.Value;
-        angle = app.AngledegEditField.Value(1);
+        angle = app.AngledegEditField.Value ;
+        scaleHold = app.scalerOP;
         selectedNode.NodeData.length = 2;
         selectedNode.NodeData.angle = angle;
-        selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2));
-        ps = draw_target(app,x,y,angle,app.UIAxes1);
+        selectedNode.NodeData.currentScale = scaleHold;
+        selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2))  + ", current scale: " + string(round(scaleHold,2));
+        ps = draw_target(app,x,y,angle,app.UIAxes1, scaleHold);
+        ps.DataTipTemplate.DataTipRows(end) = t;
         
     elseif selectedNode.Parent == app.ObstaclesNode
         radius = app.LengthEditField.Value;
@@ -20,7 +26,7 @@ function Apply(app)
         selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", radius: " + string(round(radius,2));
         ps = draw_obstacle(app,x,y,radius,app.UIAxes1);
     elseif selectedNode.Parent == app.BaseNode
-        angle = app.AngledegEditField.Value(1);
+        angle = app.AngledegEditField.Value ;
         selectedNode.NodeData.length = 1;
         selectedNode.NodeData.angle = angle;
         selectedNode.Text = "x: " + string(round(x,2)) + ", y: " + string(round(y,2)) + ", angle: " + string(round(angle,2));
@@ -28,7 +34,7 @@ function Apply(app)
     end
     
     ps.UserData = selectedNode;
-    ps.FaceAlpha = 0.1;
+    %ps.FaceAlpha = 0.1;
     selectedNode.NodeData.child = ps;
     ps.ButtonDownFcn = @(src,event)ps_mouse_click(app,src);
     ps_mouse_click(app,ps);

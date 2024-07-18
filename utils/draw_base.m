@@ -1,9 +1,9 @@
 
-function ps = draw_base(~,x,y,angle,axes)
+function ps = draw_base(app,x,y,angle,axes)
     % Draws a rectangle
     % Returns the rectangle
     theta=angle*pi/180;
-    H = 1;
+    H = 3;
     L = H;
     center_location = [ x y];
     center1=center_location(1);
@@ -31,6 +31,13 @@ function ps = draw_base(~,x,y,angle,axes)
     
     x_coor=[x_upper_left x_lower_left x_lower_right x_upper_right ];
     y_coor=[y_upper_left y_lower_left y_lower_right y_upper_right ];
+    if app.selectedTab == app.OptimizerTab
+        scale = sqrt(6) * app.scalerOP;
+    else
+        scale = sqrt(6) * app.scalerMP;
+    end
+    x_coor = x_coor * scale;
+    y_coor = y_coor * scale;
     shape = polyshape(x_coor,y_coor);
     ps = plot(axes,shape,'LineWidth',1,"FaceColor",'#001aff', 'FaceAlpha',1);
     

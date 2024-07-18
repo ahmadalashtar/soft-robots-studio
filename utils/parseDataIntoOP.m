@@ -20,7 +20,7 @@ function parseDataIntoOP(app)
     % Add targets 
     targets = app.op.targets;
     for i = 1 : length(targets(:,1))
-        create_polyshape(app,targets(i,1),targets(i,2),1,targets(i,3),true,app.scaler);
+        create_polyshape(app,targets(i,1),targets(i,2),1,targets(i,3),true,app.scalerOP);
     end
     
     % Add n_nodes

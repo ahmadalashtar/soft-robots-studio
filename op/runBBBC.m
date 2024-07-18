@@ -14,7 +14,7 @@ function [pop, fit_array] = runBBBC(app, exp)
     if bbbcs.N <= 0
         bbbcs.N = 1;
     end
-
+    feasible = false;
     variance_array= zeros(1,bbbcs.N);
     queue=zeros(1,bbbcs.variance_generations);   % queue used to calculate the variance of the last 'variance_generations' generations best individuals
     qIndex = 1;
@@ -63,10 +63,11 @@ function [pop, fit_array] = runBBBC(app, exp)
                 fprintf('[%d.%d]\t', exp, gen);
                 message = "["+  gen + "]" + app.tabChar;
                 if fit_array(1,bbbcs.fitIdx.pen) == 0
-                    fprintf('feas: ');
+                    feasible = true;
+                    fprintf('Feasible Solution: ');
                     message = message + "feas: ";
                 else
-                    fprintf('unfs: ');
+                    fprintf('Unfeasible Solution: ');
                     message = message + "unfs: ";
                 end
                 fprintf('IK %.3f ', fit_array(1,bbbcs.fitIdx.ik));
@@ -97,7 +98,7 @@ function [pop, fit_array] = runBBBC(app, exp)
     
                 best_index = fit_array(1,bbbcs.fitIdx.id);
                 configurations = decodeIndividual(pop(:,:,best_index));
-                sendOutputFromScript2GUI(app,message,configurations);
+                sendOutputFromScript2GUI(app,message,configurations, feasible);
             end
     
             %--SPECIAL CONVERGENCE CONDITIONS
@@ -162,11 +163,12 @@ function [pop, fit_array] = runBBBC(app, exp)
                 fprintf('[%d.%d]\t', exp, gen);
                 message = "["+  gen + "]" + app.tabChar;
                 if fit_array(1,bbbcs.fitIdx.pen) == 0
-                    fprintf('feas: ');
-                    message = message + "feas: ";
+                    feasible = true;
+                    fprintf('Feasible Solution: ');
+                    message = message + "Feasible Solution: ";
                 else
-                    fprintf('unfs: ');
-                    message = message + "unfs: ";
+                    fprintf('Unfeasible Solution: ');
+                    message = message + "Unfeasible Solution: ";
                 end
                 fprintf('IK %.3f ', fit_array(1,bbbcs.fitIdx.ik));
                 fprintf('(1st P: %.3f-%.3f, #%d), ', bbbcs.rankingSettings.minFit, bbbcs.rankingSettings.minFit + bbbcs.rankingSettings.step_ik, bbbcs.rankingSettings.firstPartitionSize);
@@ -196,7 +198,7 @@ function [pop, fit_array] = runBBBC(app, exp)
     
                 best_index = fit_array(1,bbbcs.fitIdx.id);
                 configurations = decodeIndividual(pop(:,:,best_index));
-                sendOutputFromScript2GUI(app,message,configurations);
+                sendOutputFromScript2GUI(app,message,configurations, feasible);
             end
     
             %--SPECIAL CONVERGENCE CONDITIONS

@@ -1,4 +1,4 @@
-function sendOutputFromScript2GUI(app,message,configurations)
+function sendOutputFromScript2GUI(app,message,configurations,feasible)
     % configurations = KeepNonZeroRows(app,configurations);
     [strResult, result]= getDesign(app,configurations);
     designLength = numel(result);
@@ -8,6 +8,11 @@ function sendOutputFromScript2GUI(app,message,configurations)
         'configurations',configurations,'obstacles', app.op.obstacles,'targets',app.op.targets,'base',app.op.home_base);
     message = string(message )+ string(strResult);
     node = uitreenode(app.OPTree,"Text",string(message));
+    if feasible
+        node.Icon = "Green-Tick.svg";
+    else
+        node.Icon = "Red-Cross.png";
+    end
     node.NodeData = data;
     app.OPTree.scroll("bottom")
 end
