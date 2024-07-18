@@ -38,7 +38,7 @@ function [p,inter] = intersectionSegmentCircle_2D(s,c,draw_plot)
         p = [0,0];
     else
         u = (seg_2-seg_1)/norm(seg_2-seg_1);    % unit vector for line direction
-
+        
         % to find the intersections, I solved a system of 3 equations:
         % - equation of the line on x dimension
         % - equation of the line on y dimension
@@ -55,6 +55,27 @@ function [p,inter] = intersectionSegmentCircle_2D(s,c,draw_plot)
         eqn3 = (x-cir_o(1))^2 + (y-cir_o(2))^2 == r^2;
         sol = solve([eqn1, eqn2, eqn3], [x, y, k]);
         
+        valid_indicesX = zeros(size(sol.x));
+        valid_indicesY = zeros(size(sol.y));
+        valid_indicesK = zeros(size(sol.k));
+        ctr = 1;
+        for i = 1:size(sol.k)
+            if sol.k(i) >= 0 && sol.k(i) <= length
+                valid_indicesX(ctr) = sol.x(i);
+                valid_indicesY(ctr) = sol.y(i);
+                valid_indicesK(ctr) = sol.k(i);
+                ctr = ctr + 1;
+            else
+                p = [0,0];
+                inter = false;
+                return;
+            end
+        end
+        
+        sol.x = valid_indicesX;
+        sol.y = valid_indicesY;
+        sol.k = valid_indicesK;
+
         nSolutions = (size(sol.x));
         nSolutions = nSolutions(1);
         

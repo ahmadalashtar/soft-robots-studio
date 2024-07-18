@@ -8,7 +8,7 @@
 %
 % OUTPUT:
 % 'robot_config_P' is a robot configuration represented as coordinates of each node in the plane
-function [robot_config_P] = MP_solveForwardKinematics2D(robot_config_AL, home_base, draw_plot)    
+function [robot_config_P] = MP_solveForwardKinematics2D(robot_config_AL, home_base, draw_plot, rotation_angle)    
 
     n_nodes = size(robot_config_AL,1); % number of nodes (links of the robot - 1)
     
@@ -42,13 +42,17 @@ function [robot_config_P] = MP_solveForwardKinematics2D(robot_config_AL, home_ba
 %         ee = (R*(ee-node)' + node')';
         
         ee = [(ee(1)-node(1))*cos(alpha) - (ee(2)-node(2))*sin(alpha) , (ee(1)-node(1))*sin(alpha) + (ee(2)-node(2))*cos(alpha)]+node;  % apply rotation      
-       
+        if j == 1
+            rotateBy = [cos(deg2rad(rotation_angle)), -sin(deg2rad(rotation_angle)); ...
+                 sin(deg2rad(rotation_angle)),  cos(deg2rad(rotation_angle))];
+            ee = (rotateBy * ee')';
+        end
         
         % recalculation of the unit vector
         mod = sqrt((ee(1)-node(1))^2 + (ee(2)-node(2))^2);        
         unitVector(1) = (ee(1) - node(1)) / mod;
         unitVector(2) = (ee(2) - node(2)) / mod;       
-        
+
         %draw robot
         if draw_plot==true
             plot([node(1),ee(1)],[node(2),ee(2)],'-o','Color','r');
