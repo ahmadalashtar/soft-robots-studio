@@ -2,6 +2,7 @@ function enable_properties(app,class)
             if class=="target"
                 app.AngledegEditField.Enable="on";
                 app.AngledegEditFieldLabel.Enable="on";
+                app.Rotator.Enable ="on";
             elseif class=="obstacle"
                 app.LengthEditFieldLabel.Enable="on";
                 app.LengthEditField.Enable="on";

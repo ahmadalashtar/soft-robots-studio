@@ -29,8 +29,9 @@ function node_click(app)
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = selectedNodes.NodeData.radius;
                     app.LengthEditFieldLabel.Text = "radius";
-                    app.AngledegEditField.Enable ="off";
-                    app.AngledegEditFieldLabel.Enable ="off";
+                    app.AngledegEditField.Enable = "off";
+                    app.AngledegEditFieldLabel.Enable = "off";
+                    app.Rotator = "off";
                     if app.genHold == -10
                         enable_properties(app,"obstacle")
                     end

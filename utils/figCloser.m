@@ -1,4 +1,3 @@
-function figCloser(src, event, fig, sld)
-    delete(sld);
-    close(fig);
+function figCloser(src, event, app)
+    close(app.figS);
 end

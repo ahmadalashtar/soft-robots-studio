@@ -61,8 +61,8 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
         % and in case that point is the target then the solution would be horrible
         
         link_count= chrom(i,n_nodes+1)-1;
-        sum_of_angles = sum(chrom(i,1:link_count)) + final_angle;
-        target_angle= op.targets(i,3);
+        sum_of_angles = sum(chrom(i,2:link_count)) + final_angle;
+        target_angle= op.targets(i,3) - op.home_base(3);
         angle_range= [target_angle-10 target_angle+10];
         if(sum_of_angles<min(angle_range) || sum_of_angles>max(angle_range))
             g(5)=1;
