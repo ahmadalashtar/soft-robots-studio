@@ -3,7 +3,7 @@ function deleteSelected(app)
     if selectedNodes.Parent == app.ObstaclesNode
         delete(selectedNodes.NodeData.child);
         delete(selectedNodes);
-        deselect(app)
+        %deselect(app)
         
     elseif selectedNodes.Parent == app.TargetsNode
 

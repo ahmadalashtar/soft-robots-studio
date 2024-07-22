@@ -9,7 +9,6 @@ function create_polyshape(app,x,y,length,angle,target, scaler)
             % Draw your shapes or add data here
             % For example, draw a rectangle:
             
-            
             if ~target
                 radius  = length;
                 ps = draw_obstacle(app,x,y,radius,app.UIAxes1);
@@ -18,6 +17,7 @@ function create_polyshape(app,x,y,length,angle,target, scaler)
                 ps = draw_target(app,x,y,angle,app.UIAxes1, scaler);
                 node = add_target_node(app,ps,x,y,length,angle, scaler);
             end
+            node.NodeData.openedFirst = false;
             ps.UserData = node;
             %ps.FaceAlpha = 0.1;
             % ps.HitTest = "off";

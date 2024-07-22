@@ -11,4 +11,5 @@ function disable_properties(app)
             app.YcoordinateEditField.Enable = "off";
             app.LengthEditField.Enable="off";
             app.AngledegEditField.Enable="off";
+            app.Rotator.Enable="off";
         end
