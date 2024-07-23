@@ -2,6 +2,9 @@ function node_click(app)
             
             selectedNodes = app.Tree.SelectedNodes;
             if app.Eraser.State == "on"
+                if ishandle(app.figS)
+                    figCloser(0, 0, app);
+                end
                 % when erasing, if you click on a node, it selects a child
                 select_child(app,selectedNodes.NodeData.child);
 
@@ -11,6 +14,9 @@ function node_click(app)
                 app.TabGroup.SelectedTab = app.PropertiesTab;
                 % msgbox(string(selectedNodes.NodeData.x))
                 if selectedNodes.Parent == app.TargetsNode || selectedNodes.Parent == app.BaseNode
+                    if ishandle(app.figS)
+                        figCloser(0, 0, app);
+                    end
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = 1;
@@ -29,13 +35,16 @@ function node_click(app)
                         end
                     end
                 elseif selectedNodes.Parent == app.ObstaclesNode
+                    if ishandle(app.figS)
+                        figCloser(0, 0, app);
+                    end
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = selectedNodes.NodeData.radius;
                     app.LengthEditFieldLabel.Text = "radius";
                     app.AngledegEditField.Enable = "off";
                     app.AngledegEditFieldLabel.Enable = "off";
-                    app.Rotator = "off";
+                    app.Rotator.Enable = "off";
                     if app.genHold == -10
                         enable_properties(app,"obstacle")
                     end
