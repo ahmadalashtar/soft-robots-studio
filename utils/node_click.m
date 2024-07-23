@@ -22,7 +22,11 @@ function node_click(app)
                         enable_properties(app,"target")
                     end
                     if selectedNodes.Parent == app.TargetsNode && isempty(selectedNodes.NodeData.child.Children)
-                        datatip(selectedNodes.NodeData.child);            
+                        if selectedNodes.NodeData.angle <= 90 && selectedNodes.NodeData.angle >=-90
+                            datatip(selectedNodes.NodeData.child, 'Location','northeast');
+                        else
+                            datatip(selectedNodes.NodeData.child, 'Location','southwest');
+                        end
                     end
                 elseif selectedNodes.Parent == app.ObstaclesNode
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
