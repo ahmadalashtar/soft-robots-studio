@@ -1,9 +1,9 @@
 function createRotator(app)
     app.figS = uifigure;
     if app.Tree.SelectedNodes.Parent == app.BaseNode
-        nameStr = " Base";
+        nameStr = "Base";
     else
-        nameStr = " Target Node - " + string(app.Tree.SelectedNodes.NodeData.child.DataTipTemplate.DataTipRows(end).Label);
+        nameStr = string(app.Tree.SelectedNodes.NodeData.child.DataTipTemplate.DataTipRows(end).Label);
     end
     app.figS.Name = "Angle Changer: " + nameStr;
     app.figS.Position(3:4) = [360 120];
