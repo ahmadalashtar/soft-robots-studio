@@ -1,6 +1,6 @@
 function gaOptionsVisibility(app,value)
-    app.SlectionmethodDropDown.Visible = value;
-    app.SlectionmethodDropDownLabel.Visible = value;
+    app.SelectionmethodDropDown.Visible = value;
+    app.SelectionmethodDropDownLabel.Visible = value;
     app.CrossovermethodDropDown.Visible = value;
     app.CrossovermethodDropDownLabel.Visible = value;
     app.CrossoverprobabilitySpinner.Visible = value;
