@@ -28,10 +28,14 @@ function node_click(app)
                         enable_properties(app,"target")
                     end
                     if selectedNodes.Parent == app.TargetsNode && isempty(selectedNodes.NodeData.child.Children)
-                        if selectedNodes.NodeData.angle <= 90 && selectedNodes.NodeData.angle >=-90
+                        if (selectedNodes.NodeData.angle <= 360 && selectedNodes.NodeData.angle >=260) || (selectedNodes.NodeData.angle <= 80 && selectedNodes.NodeData.angle >=-80)
                             datatip(selectedNodes.NodeData.child, 'Location','northeast');
-                        else
+                        elseif (selectedNodes.NodeData.angle > 170 && selectedNodes.NodeData.angle < 260) || ((selectedNodes.NodeData.angle > -170 && selectedNodes.NodeData.angle <=-80))
+                            datatip(selectedNodes.NodeData.child, 'Location','southeast');
+                        elseif (selectedNodes.NodeData.angle >= -270 && selectedNodes.NodeData.angle <=-170)
                             datatip(selectedNodes.NodeData.child, 'Location','southwest');
+                        else
+                            datatip(selectedNodes.NodeData.child, 'Location','northwest');
                         end
                     end
                 elseif selectedNodes.Parent == app.ObstaclesNode
