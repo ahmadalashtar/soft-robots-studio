@@ -10,7 +10,7 @@ function collectRunItGeneric(app)
             app.gas.generations = app.GenerationsEditField.Value;
             app.gas.n_individuals = app.IndividualsEditField.Value;
             app.gas.obstacle_avoidance = app.ObstacleavoidanceCheckBox.Value;
-            app.gas.selection_method = app.SlectionmethodDropDown.Value;    % 'tournament', 'proportionate'
+            app.gas.selection_method = app.SelectionmethodDropDown.Value;    % 'tournament', 'proportionate'
             app.gas.crossover_method = app.CrossovermethodDropDown.Value;  % 'blxa'
             app.gas.crossover_probability = app.CrossoverprobabilitySpinner.Value;
             app.gas.mutation_method = app.MutationmethodDropDown.Value;   % 'random', 'modifiedRandom'

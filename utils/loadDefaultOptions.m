@@ -16,7 +16,7 @@ function loadDefaultOptions(app)
     app.ObstacleavoidanceCheckBox.Value = true;
 
     % ga
-    app.SlectionmethodDropDown.Value = "tournament";
+    app.SelectionmethodDropDown.Value = "tournament";
     app.CrossovermethodDropDown.Value = "blxa";
     app.CrossoverprobabilitySpinner.Value = 0.9;
     app.MutationmethodDropDown.Value = "random";
