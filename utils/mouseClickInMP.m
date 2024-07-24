@@ -4,8 +4,8 @@ function mouseClickInMP(app, src, tree)
         x = src.UserData.x;
         y = src.UserData.y;
     else
-        x = src.NodeData.NodeData.x;
-        y = src.NodeData.NodeData.y;
+        x = src.NodeData(1);
+        y = src.NodeData(2);
     end
     if ~isempty(app.previousX)
         if app.previousX == x && app.previousY == y
