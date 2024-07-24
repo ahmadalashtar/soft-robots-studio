@@ -7,6 +7,9 @@ function ps_mouse_click(app,src)
         
     else
         disable_properties(app);
+        if ishandle(app.figS)
+            figCloser(0, 0, app);
+        end
         src.Selected = "off";
         delete(src.Children);
     end

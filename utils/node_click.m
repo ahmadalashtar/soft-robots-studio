@@ -21,17 +21,38 @@ function node_click(app)
                     if app.genHold == -10
                         enable_properties(app,"target")
                     end
-                    if selectedNodes.Parent == app.TargetsNode && isempty(selectedNodes.NodeData.child.Children)
-                        datatip(selectedNodes.NodeData.child);            
+                    if selectedNodes.Parent == app.TargetsNode
+                        if ishandle(app.figS) && (app.figS.Name ~= "Angle Changer: " + (string(app.Tree.SelectedNodes.NodeData.child.DataTipTemplate.DataTipRows(end).Label)))
+                            figCloser(0, 0, app);
+                        end
+                        if isempty(selectedNodes.NodeData.child.Children)
+                            if (selectedNodes.NodeData.angle <= 360 && selectedNodes.NodeData.angle >=260) || (selectedNodes.NodeData.angle <= 80 && selectedNodes.NodeData.angle >=-80)
+                                datatip(selectedNodes.NodeData.child, 'Location','northeast');
+                            elseif (selectedNodes.NodeData.angle > 170 && selectedNodes.NodeData.angle < 260) || ((selectedNodes.NodeData.angle > -170 && selectedNodes.NodeData.angle <=-80))
+                                datatip(selectedNodes.NodeData.child, 'Location','southeast');
+                            elseif (selectedNodes.NodeData.angle >= -270 && selectedNodes.NodeData.angle <=-170)
+                                datatip(selectedNodes.NodeData.child, 'Location','southwest');
+                            else
+                                datatip(selectedNodes.NodeData.child, 'Location','northwest');
+                            end
+                        end
+                    else
+                        if ishandle(app.figS) && (app.figS.Name ~= "Angle Changer: Base")
+                            figCloser(0, 0, app);
+                        end
                     end
+                    
                 elseif selectedNodes.Parent == app.ObstaclesNode
+                    if ishandle(app.figS)
+                        figCloser(0, 0, app);
+                    end
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = selectedNodes.NodeData.radius;
                     app.LengthEditFieldLabel.Text = "radius";
                     app.AngledegEditField.Enable = "off";
                     app.AngledegEditFieldLabel.Enable = "off";
-                    app.Rotator = "off";
+                    app.Rotator.Enable = "off";
                     if app.genHold == -10
                         enable_properties(app,"obstacle")
                     end
