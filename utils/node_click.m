@@ -15,7 +15,7 @@ function node_click(app)
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = 1;
                     app.AngledegEditField.Value = selectedNodes.NodeData.angle;
-                    app.LengthEditFieldLabel.Text = "length";
+                    app.LengthEditFieldLabel.Text = "Length";
                     app.LengthEditField.Enable="off";
                     app.LengthEditFieldLabel.Enable="off";
                     if app.genHold == -10
@@ -49,7 +49,8 @@ function node_click(app)
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = selectedNodes.NodeData.radius;
-                    app.LengthEditFieldLabel.Text = "radius";
+                    app.LengthEditFieldLabel.Text = "Radius";
+                    app.AngledegEditField.Value = 0;
                     app.AngledegEditField.Enable = "off";
                     app.AngledegEditFieldLabel.Enable = "off";
                     app.Rotator.Enable = "off";
