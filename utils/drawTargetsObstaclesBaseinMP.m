@@ -19,7 +19,7 @@ function drawTargetsObstaclesBaseinMP(app)
         datatip(ps);
         ps.Children.PickableParts = 'none';
         ps.UserData =data;
-        ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src);
+        ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src, 0);
     end
     
 end
