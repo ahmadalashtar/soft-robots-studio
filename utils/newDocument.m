@@ -14,7 +14,8 @@ function newDocument(app)
     add_base_plot_and_node(app,0,0,0);
     
     delete(app.OPTree.Children);
-
+    delete(app.Tree2.Children);
+    delete(app.Tree2.SelectedNodes);
     while numel(app.MPTree.Children) > 1
         delete(app.MPTree.Children(1));
     end
