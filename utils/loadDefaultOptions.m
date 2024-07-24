@@ -40,7 +40,7 @@ function loadDefaultOptions(app)
     app.RetractingEditField.Value = 1;
     
     % motion planner step size
-    app.SteeringEditField_2.Value = 2.5;
+    app.SteeringEditField_2.Value = 7.5;
     app.GrowingandretractingEditField.Value = 10;
 
     % motion planner's parameters

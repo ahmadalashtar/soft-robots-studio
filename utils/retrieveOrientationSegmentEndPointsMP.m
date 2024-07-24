@@ -1,4 +1,4 @@
-function [end_points] = retrieveOrientationSegmentEndPointsMP(draw_plot,var)
+function [end_points] = retrieveOrientationSegmentEndPointsMP(draw_plot,var,app)
     
     global op;  % optimization problem
     op.end_points = [];
@@ -14,13 +14,13 @@ function [end_points] = retrieveOrientationSegmentEndPointsMP(draw_plot,var)
 
         u = [cos(deg2rad(angle)),sin(deg2rad(angle))];
 
-        segmentLength = calculateSegmentLengthMP(var.NodeData.targets(i,:),op.home_base,op.n_nodes*op.length_domain(2));
+        segmentLength = calculateSegmentLengthMP(var.NodeData.targets(i,:),app.MPTree.SelectedNodes.NodeData.base,op.n_nodes*op.length_domain(2));
         
         p = var.NodeData.targets(i,1:2) + u*segmentLength;
 
         dO = []; 
-        for j=1:1:size(op.obstacles,1)            
-            [pointsOnObstacles , inter] = intersectionSegmentCircle_2D([var.NodeData.targets(i,1:2) ; p], op.obstacles(j,:), false);
+        for j=1:1:size(app.MPTree.SelectedNodes.NodeData.obstacles)            
+            [pointsOnObstacles , inter] = intersectionSegmentCircle_2D([var.NodeData.targets(i,1:2) ; p], app.MPTree.SelectedNodes.NodeData.obstacles(j,:), false);
             if inter==true
                 dO = [dO; norm(pointsOnObstacles-var.NodeData.targets(i,1:2)),pointsOnObstacles];
             end            

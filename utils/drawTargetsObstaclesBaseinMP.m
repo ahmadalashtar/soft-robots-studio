@@ -4,7 +4,7 @@ function drawTargetsObstaclesBaseinMP(app)
     ps = draw_base(app,selectedNode.NodeData.base(1), selectedNode.NodeData.base(2), selectedNode.NodeData.base(3),app.UIAxes2);
     data = struct("x",selectedNode.NodeData.base(1),"y",selectedNode.NodeData.base(2));
     ps.UserData =data;
-    ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src);
+    ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src, false);
     % [~] = draw_base(app,0, 0, 0,app.UIAxes2);
     % draw obstacles
     for i = 1:numel(selectedNode.NodeData.obstacles(:,1))
@@ -19,7 +19,7 @@ function drawTargetsObstaclesBaseinMP(app)
         datatip(ps);
         ps.Children.PickableParts = 'none';
         ps.UserData =data;
-        ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src, 0);
+        ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src, false);
     end
     
 end
