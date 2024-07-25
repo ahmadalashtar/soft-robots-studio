@@ -13,7 +13,7 @@ function [robot_config_P] = MP_solveForwardKinematics2D(robot_config_AL, home_ba
     n_nodes = size(robot_config_AL,1); % number of nodes (links of the robot - 1)
     
     %%%%%%%%%%editted home base
-    unitVector_start = [cos(deg2rad(home_base(2))),sin(deg2rad(home_base(2)))];
+    unitVector_start = [cos(deg2rad(home_base(3))),sin(deg2rad(home_base(3)))];
     node = home_base(1:2);          % 'node' will be the current node, starts from the robot's base
     unitVector = unitVector_start;  % unit vector used to define the orientation of the current link
     
@@ -42,11 +42,7 @@ function [robot_config_P] = MP_solveForwardKinematics2D(robot_config_AL, home_ba
 %         ee = (R*(ee-node)' + node')';
         
         ee = [(ee(1)-node(1))*cos(alpha) - (ee(2)-node(2))*sin(alpha) , (ee(1)-node(1))*sin(alpha) + (ee(2)-node(2))*cos(alpha)]+node;  % apply rotation      
-        if j == 1
-            rotateBy = [cos(deg2rad(rotation_angle)), -sin(deg2rad(rotation_angle)); ...
-                 sin(deg2rad(rotation_angle)),  cos(deg2rad(rotation_angle))];
-            ee = (rotateBy * ee')';
-        end
+ 
         
         % recalculation of the unit vector
         mod = sqrt((ee(1)-node(1))^2 + (ee(2)-node(2))^2);        

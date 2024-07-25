@@ -98,7 +98,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmV3(sp)
 
                 growthSp = sp;
                 growthSp.start_conf = path{size(path, 2)};
-                growthSol = MP_searchAlgorithmTest_2D(growthSp, false);
+                growthSol = MP_searchAlgorithmTest_2D(growthSp, true);
 
                 if isempty(growthSol)
                     solution = [];
