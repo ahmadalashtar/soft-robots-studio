@@ -14,7 +14,7 @@ function create_polyshape(app,x,y,length,angle,target, scaler, radius)
                 ps = draw_obstacle(app,x,y,radiusO,app.UIAxes1);
                 node = add_obstacle_node(app,ps,x,y,radiusO);
             elseif target
-                ps = draw_target(app,x,y,angle,app.UIAxes1, radius);
+                ps = draw_target(app,x,y,angle,app.UIAxes1);
                 node = add_target_node(app,ps,x,y,length,angle, scaler, radius);
             end
             node.NodeData.openedFirst = false;

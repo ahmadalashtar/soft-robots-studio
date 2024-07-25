@@ -15,7 +15,7 @@ function stable_zoom(app)
         app.TargetsNode.Children(i).NodeData.angle = angle;
         app.TargetsNode.Children(i).NodeData.currentScale = app.scalerOP;
         app.TargetsNode.Children(i).Text = "X: " + string(round(x,2)) + ", Y: " + string(round(y,2)) + ", Angle: " + string(round(angle,2))  + ", Radius: " + string(radius);
-        ps = draw_target(app,x,y,angle,app.UIAxes1, radius);
+        ps = draw_target(app,x,y,angle,app.UIAxes1);
         ps.UserData = app.TargetsNode.Children(i);
         %ps.FaceAlpha = 0.1;
         app.TargetsNode.Children(i).NodeData.child = ps;

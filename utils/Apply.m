@@ -18,7 +18,7 @@ function Apply(app)
             t = child.DataTipTemplate.DataTipRows(end);
             angle = app.AngledegEditField.Value(1);
             scaleHold = app.scalerOP;
-            radius = app.TargetCollisionRadiusEditField.Value(1);
+            radius = app.TargetCollisionRadiusEditField.Value;
 
             selectedNode.NodeData.length = 2;
             selectedNode.NodeData.angle = angle;
@@ -26,9 +26,7 @@ function Apply(app)
             selectedNode.NodeData.radius = radius;
             selectedNode.Text = formatText(x, y, [angle,radius]);
 
-            ps;
-            ps.Collcirc;
-            ps = draw_target(app, x, y, angle, app.UIAxes1, scaleHold);
+            ps = draw_target(app, x, y, angle, app.UIAxes1);
             ps.DataTipTemplate.DataTipRows(end) = t;
             
         case app.ObstaclesNode
@@ -66,9 +64,9 @@ function text = formatText(x, y, variable)
     %Formatting the text based on the number of input arguments
     text = "X: " + string(round(x, 2)) + ", Y: " + string(round(y, 2));
     if nargin > 2
-        text = text + ", Angle: " + string(round(variable(1), 2));
+        text = text + ", Angle: " + string(variable(1));
         if nargin > 3
-            text = text + ", Radius: " + string(round(variable(2), 2));
+            text = text + ", Radius: " + string(variable(2));
         end
     end
 end
