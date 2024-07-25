@@ -26,15 +26,7 @@ function node_click(app)
                             figCloser(0, 0, app);
                         end
                         if isempty(selectedNodes.NodeData.child.Children)
-                            if (selectedNodes.NodeData.angle <= 360 && selectedNodes.NodeData.angle >=260) || (selectedNodes.NodeData.angle <= 80 && selectedNodes.NodeData.angle >=-80)
-                                datatip(selectedNodes.NodeData.child, 'Location','northeast');
-                            elseif (selectedNodes.NodeData.angle > 170 && selectedNodes.NodeData.angle < 260) || ((selectedNodes.NodeData.angle > -170 && selectedNodes.NodeData.angle <=-80))
-                                datatip(selectedNodes.NodeData.child, 'Location','southeast');
-                            elseif (selectedNodes.NodeData.angle >= -270 && selectedNodes.NodeData.angle <=-170)
-                                datatip(selectedNodes.NodeData.child, 'Location','southwest');
-                            else
-                                datatip(selectedNodes.NodeData.child, 'Location','northwest');
-                            end
+                            labelWithAngle(selectedNodes.NodeData.child, selectedNodes.NodeData.angle);
                         end
                     else
                         if ishandle(app.figS) && (app.figS.Name ~= "Angle Changer: Base")

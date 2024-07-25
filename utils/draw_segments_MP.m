@@ -1,6 +1,6 @@
 function draw_segments_MP(app,axes,var)
     try
-        points = retrieveOrientationSegmentEndPointsMP(false,var);
+        points = retrieveOrientationSegmentEndPointsMP(false,var,app);
         loadOP(app.op, points);
 
         % one target => points = [ x ; y]
