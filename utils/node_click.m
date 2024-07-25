@@ -18,6 +18,18 @@ function node_click(app)
                     app.LengthEditFieldLabel.Text = "Length";
                     app.LengthEditField.Enable="off";
                     app.LengthEditFieldLabel.Enable="off";
+                    if selectedNodes.Parent == app.TargetsNode
+                        app.TargetCollisionRadiusEditField.Enable="on";
+                        app.TargetCollisionRadiusEditField.Visible = "on";
+                        app.TargetCollisionRadiusEditFieldLabel.Enable="on";
+                        app.TargetCollisionRadiusEditFieldLabel.Visible = "on";
+                    else
+                        app.TargetCollisionRadiusEditField.Enable="off";
+                        app.TargetCollisionRadiusEditField.Visible = "off";
+                        app.TargetCollisionRadiusEditFieldLabel.Enable="off";
+                        app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
+                    end
+                    
                     if app.genHold == -10
                         enable_properties(app,"target")
                     end
@@ -45,6 +57,10 @@ function node_click(app)
                     app.AngledegEditField.Value = 0;
                     app.AngledegEditField.Enable = "off";
                     app.AngledegEditFieldLabel.Enable = "off";
+                    app.TargetCollisionRadiusEditField.Enable="off";
+                    app.TargetCollisionRadiusEditField.Visible = "off";
+                    app.TargetCollisionRadiusEditFieldLabel.Enable="off";
+                    app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
                     app.Rotator.Enable = "off";
                     if app.genHold == -10
                         enable_properties(app,"obstacle")

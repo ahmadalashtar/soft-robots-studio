@@ -65,25 +65,8 @@ void PriorityQueue<T>::setMaxSize(size_t maxSizeA) {
 
 template<typename T>
 void PriorityQueue<T>::insert(const T& element) {
-    if (full() && v.size() > 2) {
-        size_t max {v[1] < v[2] ? size_t{1} : size_t{2}};
-        if (v[max] < element)
-            v[max] = element;
-        else if (element < v[0]) {
-            v[max] = std::move(v[0]);
-            v[0] = element;
-
-            bubbleDown(max);
-        }
-        else {
-            v[max] = element;
-            bubbleDown(max);
-        }
-    }
-    else {
-        v.push_back(element);
-        bubbleUp(v.size() - 1);
-    }
+    v.push_back(element);
+    bubbleUp(v.size() - 1);
 }
 
 template<typename T>
@@ -149,7 +132,7 @@ size_t PriorityQueue<T>::getFirstChild(size_t index) {
 
 template<typename T>
 bool PriorityQueue<T>::isEvenLevel(size_t index) {
-    size_t level {size_t{std::log2(index + 1)}};
+    size_t level {size_t(std::log2(index + 1))};
     return level % 2 == 0; 
 }
 

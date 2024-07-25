@@ -1,4 +1,4 @@
-function ps = draw_target(app, x, y, angle, axes,scaler)
+function ps = draw_target(app, x, y, angle, axes, radius)
     % Define the star coordinates as a matrix
     star = [cosd(90) sind(90)
             (1/3)*cosd(54) (1/3)*sind(54)
@@ -13,10 +13,10 @@ function ps = draw_target(app, x, y, angle, axes,scaler)
             cosd(90) sind(90)];
     
     % Double the size using a scaling factor of 2
-    scale = 6 * scaler;
+    scale = 6 * app.scalerOP;
     scaling_matrix = [scale 0; 0 scale];
     
-    % Apply the scaling matrix to the star coordinates
+    % Apply the scaling matrix to the star coordinates  
     star = star * scaling_matrix;
     
     % Translate the star coordinates
@@ -25,8 +25,17 @@ function ps = draw_target(app, x, y, angle, axes,scaler)
     % Create the polyshape and rotate it
     shape = polyshape(star);
     shape = rotate(shape, angle, [x y]);
+
+    collCirc = rectangle('Parent', axes, 'Position', [x-radius, y-radius, 2*radius, 2*radius], ...
+          'Curvature', [1, 1], ...
+          'EdgeColor', '#98a0ed', ...
+          'LineWidth', 1);
+    
     ps = plot(axes, shape, 'LineWidth', 1, "FaceColor", "#98a0ed");
+    plot(axes, collCirc)
     dt = datatip(ps, 1,1);
     ps.DataTipTemplate.DataTipRows(end+1)="Target: "+ string(height(app.TargetsNode.Children)+1);
     delete(dt);
+
+    addlistener(ps, 'ObjectBeingDestroyed', @(src, event) delete(collCirc));
 end

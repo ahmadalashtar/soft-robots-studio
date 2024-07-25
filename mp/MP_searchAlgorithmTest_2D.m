@@ -1,11 +1,11 @@
-function [solution, expandedNodes, times] = MP_searchAlgorithmTest_2D(sp, retraction)
+function [solution, expandedNodes, times] = MP_searchAlgorithmTest_2D(sp, fringeSize, retraction)
     times.fringe = 0;
     times.greedy = 0;
     times.fullExpand = 0;
 
     expandedNodes = 0;
 
-    instanceId = PDQ_test("init", 100000);
+    instanceId = PDQ_test("init", fringeSize);
 
     % PDQ_test("insertAny", instanceId, root.path, [root.g, root.h, root.f]);
 
@@ -64,16 +64,10 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmTest_2D(sp, retrac
             if size(sp.goals, 1) == 0
                 tic
                 [path, costs] = PDQ_test("extractHead", instanceId);
-                solution.path = [];
-                for config = path
-                    solution.path = [solution.path, config{1}];
-          
-                    solution.g = costs(1);
-                    solution.h = costs(2);
-                    solution.f = costs(3);
-                end
-
-                calculateTotalCost(path, sp.home_base);
+                solution.path = path;
+                solution.g = costs(1);
+                solution.h = costs(2);
+                solution.f = costs(3);
 
                 time = toc;
                 times.fringe = times.fringe + time;
@@ -135,7 +129,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmTest_2D(sp, retrac
         end
     end
     tic
-    PDQ_test("destroyAll");
+    PDQ_test("destroy", instanceId);
     time = toc;
     times.fringe = times.fringe + time;
     times.total = times.fringe + times.greedy + times.fullExpand;

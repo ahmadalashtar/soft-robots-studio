@@ -7,7 +7,9 @@ sp.goal_conf = sp.goals(1:sp.j, 1:2);
 sp.isSimulataneously = false;
 
 startTime = clock;
-[solution, ~, times] = MP_searchAlgorithmV3(sp);
+[solution] = MP_searchAlgorithmV3(sp);
+solution.path = pathConversion1_2D(solution.path);
+
 endTime = clock;
 
 totalTime = endTime - startTime;

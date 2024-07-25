@@ -7,6 +7,7 @@
 % DISCLAIMER:
 % It must me updated to draw obstacles when we will add any in the future
 function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles, axes,secondsToPause)
+
     % --- Example of commands, remove this piece of code for real usage ----
 %     commands = zeros(3,3,10);
 %     for i=1:1:10
@@ -52,34 +53,77 @@ function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles,
             plot(axes,[startConf(i-1,1),startConf(i,1)],[startConf(i-1,2),startConf(i,2)],'-o','Color',grayRobotColor, 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
 
+        %draw the end configuration
+%         endConf = commands(: , : , end);
+%         for z = 1:size(sp.design,1):size(sp.goals,1)
+%             endConf = MP_solveForwardKinematics2D(sp.goals(z:z+(size(sp.design,1)-1),:), sp.home_base, false);
+% %                 endConf = MP_solveForwardKinematics2D(sp.goals(1:4,:), sp.home_base, false);
+% %             end_effectors(k,:) = robot_CC(n_joints+1,:); 
+%             for i=2:1:n_joints+1
+%                 plot([endConf(i-1,1),endConf(i,1)],[endConf(i-1,2),endConf(i,2)],'-o','Color','b', 'LineWidth', 1.5);
+%             end
+%         end
         for i=2:1:n_joints+1
             plot(axes,[endConf(i-1,1),endConf(i,1)],[endConf(i-1,2),endConf(i,2)],'-o','Color','b', 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
+
         % draws the soft robot
         for i=2:1:n_joints+1
             plot(axes,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color','r', 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
         
         % draws the path from the end effector array
-        if drawPath == true
+        if drawPath == true 
             for j=1:3:k
-                    plot(axes,end_effectors(j,1),end_effectors(j,2),'.','Color','b');
+                plot(axes,end_effectors(j,1),end_effectors(j,2),'.','Color','b');
             end
         end
 
-
+%         for i=1:1:n_obstacles
+%             [X,Y,Z] = cylinder(sp.obstacles(i,4));
+%             X = X + sp.obstacles(i,1);
+%             Y = Y + sp.obstacles(i,2);
+%             Z = Z*-sp.obstacles(i,5) + sp.obstacles(i,3);
+%             plot3(X,Y,Z,'Color','k');
+%             th = 0:pi/50:2*pi;
+%             xunit = sp.obstacles(i,4) * cos(th) + sp.obstacles(i,1);
+%             yunit = sp.obstacles(i,4) * sin(th) + sp.obstacles(i,2);
+%             zunit = 0*th + sp.obstacles(i,3);
+%             plot3(xunit, yunit, zunit,'Color','k');
+%             plot3(xunit, yunit, (zunit-sp.obstacles(i,5)),'Color','k');
+%         end
         for i = 1:1:n_obstacles
             theta = linspace(0, 2*pi,100);
             X = obstacles(i, 3) * cos(theta) + obstacles(i, 1);
             Y = obstacles(i, 3) * sin(theta) + obstacles(i, 2);
             plot(axes,X, Y, 'k');
-
+%             [X, Y] = rectangle('Position',[sp.obstacles(i, 1) - sp.obstacles(i, 3), sp.obstacles(i, 2) -sp.obstacles(i, 3) , 2 * sp.obstacles(i, 3), 2 * sp.obstacles(i, 3)], 'Curvature', [1 ,1], 'EdgeColor', 'k');%cylinder(sp.obstacles(i, 4), 10);
+%             X = X + sp.obstacles(i, 1);
+%             Y = Y + sp.obstacles(i, 2);
+% %             Z = Z * -sp.obstacles(i, 5) + sp.obstacles(i, 3);
+% 
+%             surf(X, Y, 'FaceColor', 'w', 'EdgeColor', 'none');
+%             grayColor = '#778079';
+%             plot3(X,Y,Z,'Color',grayColor);
+%             th = 0:pi / 50:2 * pi;
+%             xunit = sp.obstacles(i, 3) * cos(th) + sp.obstacles(i, 1);
+%             yunit = sp.obstacles(i, 3) * sin(th) + sp.obstacles(i, 2);
+% %             zunit = 0 * th + sp.obstacles(i, 3);
+% 
+%             plot(xunit, yunit,'Color',grayColor);
+%             plot(xunit, yunit,'Color',grayColor);
         end
 
 
-        
 
+        % cameratoolbar('SetCoordSys','x');
+        % view(0,90);
 
+%          filepath = "C:\Users\OMEN\C_C++_MATLAB_Projects\VScode__\Files\Figures\" + sp.problemName;
+% % %         fullFilePath = fullfile(filepath, [num2str(k), '.fig']);
+% % %         savefig(gcf, fullFilePath)
+%          fullFilePathPng = fullfile(filepath, [num2str(k), '.png']);
+%          saveas(gcf, fullFilePathPng);
         pause(0); %change this to make the animation faster/slower
     end
     

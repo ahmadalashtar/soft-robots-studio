@@ -12,4 +12,6 @@ function disable_properties(app)
             app.LengthEditField.Enable="off";
             app.AngledegEditField.Enable="off";
             app.Rotator.Enable="off";
+            app.TargetCollisionRadiusEditFieldLabel.Enable = "off";
+            app.TargetCollisionRadiusEditField.Enable = "off";
         end

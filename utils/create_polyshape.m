@@ -1,4 +1,4 @@
-function create_polyshape(app,x,y,length,angle,target, scaler)
+function create_polyshape(app,x,y,length,angle,target, scaler, radius)
             xLimits = app.UIAxes1.XLim;
                 
             yLimits = app.UIAxes1.YLim;
@@ -10,12 +10,12 @@ function create_polyshape(app,x,y,length,angle,target, scaler)
             % For example, draw a rectangle:
             
             if ~target
-                radius  = length;
-                ps = draw_obstacle(app,x,y,radius,app.UIAxes1);
-                node = add_obstacle_node(app,ps,x,y,radius);
+                radiusO  = length;
+                ps = draw_obstacle(app,x,y,radiusO,app.UIAxes1);
+                node = add_obstacle_node(app,ps,x,y,radiusO);
             elseif target
-                ps = draw_target(app,x,y,angle,app.UIAxes1, scaler);
-                node = add_target_node(app,ps,x,y,length,angle, scaler);
+                ps = draw_target(app,x,y,angle,app.UIAxes1, radius);
+                node = add_target_node(app,ps,x,y,length,angle, scaler, radius);
             end
             node.NodeData.openedFirst = false;
             ps.UserData = node;
