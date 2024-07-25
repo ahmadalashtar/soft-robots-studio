@@ -1,8 +1,8 @@
 function loadDefaultOptions(app)
     % robot parameters
     app.LinksEditField.Value = 20;
-    app.MinangleEditField.Value = -45;
-    app.MaxangleEditField.Value = 45;
+    app.MinangleEditField.Value = -30;
+    app.MaxangleEditField.Value = 30;
     app.MinlengthEditField.Value= 10;
     app.MaxlengthEditField.Value = 40;
     app.FirstangleEditField.Value = 0;
