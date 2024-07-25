@@ -22,12 +22,13 @@ function Apply(app)
             selectedNode.NodeData.length = 2;
             selectedNode.NodeData.angle = angle;
             selectedNode.NodeData.currentScale = scaleHold;
-            selectedNode.Text = formatText(x, y, angle, scaleHold);
+            selectedNode.Text = formatText(x, y, [angle,scaleHold]);
 
             ps = draw_target(app, x, y, angle, app.UIAxes1, scaleHold);
             ps.DataTipTemplate.DataTipRows(end) = t;
             
         case app.ObstaclesNode
+            
             radius = app.LengthEditField.Value;
 
             selectedNode.NodeData.radius = radius;
@@ -61,9 +62,9 @@ function text = formatText(x, y, variable)
     %Formatting the text based on the number of input arguments
     text = "x: " + string(round(x, 2)) + ", y: " + string(round(y, 2));
     if nargin > 2
-        text = text + ", angle: " + string(round(variable{1}, 2));
+        text = text + ", angle: " + string(round(variable(1), 2));
         if nargin > 3
-            text = text + ", current scale: " + string(round(variable{2}, 2));
+            text = text + ", current scale: " + string(round(variable(2), 2));
         end
     end
 end
