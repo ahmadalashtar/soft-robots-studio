@@ -12,6 +12,8 @@ function toggleUI(app,value, except)
     end
 
     app.Tree.Enable = value;
+
+    app.Tree2.Enable = value;
     
     children = app.GridLayout2.Children;
     for i = 1 : length(children) 

@@ -1,7 +1,12 @@
-function mouseClickInMP(app, src)
+function mouseClickInMP(app, src, tree)
     node = app.MPTree.SelectedNodes;
-    x = src.UserData.x;
-    y = src.UserData.y;
+    if ~tree  
+        x = src.UserData.x;
+        y = src.UserData.y;
+    else
+        x = src.NodeData(1);
+        y = src.NodeData(2);
+    end
     if ~isempty(app.previousX)
         if app.previousX == x && app.previousY == y
             return
