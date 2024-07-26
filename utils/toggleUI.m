@@ -66,6 +66,9 @@ function toggleUI(app,value, except)
     app.RunMenu.Enable = value;
 
     app.TestsMenu.Enable = value;
+
+    app.TargetCollisionRadiusEditField.Enable = value;
+    app.TargetCollisionRadiusEditFieldLabel.Enable = value;
     
     % reverse the state of the items in excpet 
     for i = 1: numel(except)

@@ -40,13 +40,13 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
     
     %--RANDOM INITIALIZATION
     if (app.holdNode < 0)
-        pop = initializeRandomPopulation();  % pop is [t+1 x n+4 x n_individuals]
+        pop = initializeRandomPopulation(app.TargetCollisionCheckBox.Value);  % pop is [t+1 x n+4 x n_individuals]
     else
         pop = app.holdNode;
     end
 
     %--EVALUATION
-    [pop, fit_array_P] = evaluate(pop);
+    [pop, fit_array_P] = evaluate(pop, app.TargetCollisionCheckBox.Value);
     [fit_array_P] = rankingEvaluation(fit_array_P);
     
     %--ITERATIONS
@@ -63,10 +63,10 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
             matPool = selection(fit_array_P(:,[gas.fitIdx.rank, gas.fitIdx.id]));   % passing to selection only rank fitness and pop-related id
             
             %--VARIATION
-            offspring = variation(pop, matPool);
+            offspring = variation(pop, matPool,app.TargetCollisionCheckBox.Value);
             
             %--EVALUATION
-            [offspring, fit_array_O] = evaluate(offspring);
+            [offspring, fit_array_O] = evaluate(offspring, app.TargetCollisionCheckBox.Value);
             [fit_array_O] = rankingEvaluation(fit_array_O);
              
             %--SURVIVOR
@@ -178,10 +178,10 @@ function [pop, fit_array_P] = runGeneticAlgorithm(app,exp)
             matPool = selection(fit_array_P(:,[gas.fitIdx.rank, gas.fitIdx.id]));   % passing to selection only rank fitness and pop-related id
             
             %--VARIATION
-            offspring = variation(pop, matPool);
+            offspring = variation(pop, matPool,app.TargetCollisionCheckBox.Value);
             
             %--EVALUATION
-            [offspring, fit_array_O] = evaluate(offspring);
+            [offspring, fit_array_O] = evaluate(offspring, app.TargetCollisionCheckBox.Value);
             [fit_array_O] = rankingEvaluation(fit_array_O);
              
             %--SURVIVOR

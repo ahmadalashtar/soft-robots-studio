@@ -4,15 +4,22 @@ function createCollisionCircle(app, nodeData)
     radius = nodeData.radius;
 
     % Delete previous collision circle if it exists
-    if isfield(nodeData, 'collCirc') && ishandle(nodeData.collCirc)
-        delete(nodeData.collCirc);
+    if isfield(app.Tree.SelectedNodes.NodeData, 'collCirc') && ishandle(app.Tree.SelectedNodes.NodeData.collCirc)
+        delete(app.Tree.SelectedNodes.NodeData.collCirc);
     end
 
-    collCirc = rectangle('Parent', app.UIAxes1, 'Position', [x - str2double(radius), y - str2double(radius), 2 * str2double(radius), 2 * str2double(radius)], ...
+    if isstring(radius) || ischar(radius)
+        collCirc = rectangle('Parent', app.UIAxes1, 'Position', [x - str2double(radius), y - str2double(radius), 2 * str2double(radius), 2 * str2double(radius)], ...
                          'Curvature', [1, 1], ...
                          'EdgeColor', '#98a0ed', ...
-                         'LineWidth', 1);
-    nodeData.collCirc = collCirc; % Store collCirc handle
+                         'LineWidth', 1, 'Tag', "collCirc");
+    else
+        collCirc = rectangle('Parent', app.UIAxes1, 'Position', [x - radius, y - radius, 2 * radius, 2 * radius], ...
+                         'Curvature', [1, 1], ...
+                         'EdgeColor', '#98a0ed', ...
+                         'LineWidth', 1, 'Tag', "collCirc");
+    end
+    app.Tree.SelectedNodes.NodeData.collCirc = collCirc; % Store collCirc handle
 
     addlistener(nodeData.child, 'ObjectBeingDestroyed', @(src, event) delete(collCirc));
 end

@@ -2,18 +2,18 @@ function ps_mouse_click(app, src)
     if src.Selected == "off"
         app.Tree.SelectedNodes = src.UserData;
         node_click(app);
-
     else
         disable_properties(app);
         if ishandle(app.figS)
             figCloser(0, 0, app);
         end
-        src.Selected = "off";
 
         % Delete collCirc if it exists
-        if isfield(src.UserData.NodeData, 'collCirc') && ishandle(src.UserData.NodeData.collCirc)
-            delete(src.UserData.NodeData.collCirc);
+        if isfield(app.Tree.SelectedNodes.NodeData, 'collCirc') && ishandle(app.Tree.SelectedNodes.NodeData.collCirc)
+            delete(app.Tree.SelectedNodes.NodeData.collCirc);
         end
+
+        src.Selected = "off";
 
         delete(src.Children);
     end

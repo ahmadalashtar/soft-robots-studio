@@ -1,5 +1,5 @@
 %--------------STATIC PENALTY METHOD--------------
-function [gScalar] = calculateStaticPenalty(chrom, r)          
+function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles)          
     global op;  % optimization problem
     global gas; % genetic algorithm settings
     global bbbcs;
@@ -43,12 +43,45 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
         for j=1:1:ee_index-1           
             p_start = robot_points(j,:);
             p_end = robot_points(j+1,:);
-            link_length = norm(p_end-p_start);                
-            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles);  
-            n_nearby_obstacles = size(nearby_obstacles,2);
-            for z=1:1:n_nearby_obstacles
-                if intersectObstacle_2D([p_start; p_end],op.obstacles(nearby_obstacles(z),:),false)
-                    intersections = intersections + 1;
+            link_length = norm(p_end-p_start);      
+            % if targetsRObstacles == true
+            % 
+            %     obstacles_n_targets = zeros(size(op.obstacles, 1) + n_targets-1, 3);
+            %     obstacles_n_targets(1:size(op.obstacles, 1), :) = op.obstacles; 
+            % 
+            %     ownIndicePassed = false;
+            %     for k = 1:n_targets
+            %         if k == i
+            %             ownIndicePassed = true;
+            %             continue;
+            %         end
+            %         currObstc(1) = op.targets(k, 1);
+            %         currObstc(2) = op.targets(k, 2);
+            %         currObstc(3) = op.targets(k, 4);
+            %         if ownIndicePassed
+            %             obstacles_n_targets(size(op.obstacles, 1)+k-1, :) = currObstc;
+            %         else
+            %             obstacles_n_targets(size(op.obstacles, 1)+k, :) = currObstc;
+            %         end
+            %     end
+            % end
+            if targetsRObstacles
+                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles_n_targets);  
+                n_nearby_obstacles = size(nearby_obstacles,2);
+                for z=1:1:n_nearby_obstacles
+                    if intersectObstacle_2D([p_start; p_end],op.obstacles_n_targets(nearby_obstacles(z),:),false)
+                        intersections = intersections + 1;
+                    end
+                end
+                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+            else
+                nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles);  
+                n_nearby_obstacles = size(nearby_obstacles,2);
+                for z=1:1:n_nearby_obstacles
+                    if intersectObstacle_2D([p_start; p_end],op.obstacles(nearby_obstacles(z),:),false)
+                        intersections = intersections + 1;
+                    end
                 end
             end
         end

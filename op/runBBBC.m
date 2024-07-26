@@ -20,7 +20,7 @@ function [pop, fit_array] = runBBBC(app, exp)
     qIndex = 1;
     variance = 0;
     if (app.holdNode < 0)
-        pop = initializeRandomPopulation();  % pop is [t+1 x n+4 x n_individuals]
+        pop = initializeRandomPopulation(app.TargetCollisionCheckBox.Value);  % pop is [t+1 x n+4 x n_individuals]
     else
         pop = app.holdNode;
     end
@@ -35,13 +35,13 @@ function [pop, fit_array] = runBBBC(app, exp)
             % end GUI
             if gen == 1  %--BIG BANG
                 %--RANDOM INITIALIZATION - First Big Bang Phase
-                pop = initializeRandomPopulation();  % pop is [t+1 x n+4 x n_individuals]
+                pop = initializeRandomPopulation(app.TargetCollisionCheckBox.Value);  % pop is [t+1 x n+4 x n_individuals]
             else
                 pop = bigBangPhase(cMass, gen);        
             end
     
             %--EVALUATION
-            [pop, fit_array] = evaluate(pop);
+            [pop, fit_array] = evaluate(pop, app.TargetCollisionCheckBox.Value);
             [fit_array] = rankingEvaluation(fit_array);
     
             %--BIG CRUNCH
@@ -135,13 +135,13 @@ function [pop, fit_array] = runBBBC(app, exp)
             % end GUI
             if gen == 1  %--BIG BANG
                 %--RANDOM INITIALIZATION - First Big Bang Phase
-                pop = initializeRandomPopulation();  % pop is [t+1 x n+4 x n_individuals]
+                pop = initializeRandomPopulation(app.TargetCollisionCheckBox.Value);  % pop is [t+1 x n+4 x n_individuals]
             else
                 pop = bigBangPhase(cMass, gen);        
             end
     
             %--EVALUATION
-            [pop, fit_array] = evaluate(pop);
+            [pop, fit_array] = evaluate(pop, app.TargetCollisionCheckBox.Value);
             [fit_array] = rankingEvaluation(fit_array);
     
             %--BIG CRUNCH

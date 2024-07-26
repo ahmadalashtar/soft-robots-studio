@@ -5,10 +5,33 @@
 %
 % OUTPUT: 
 % 'indv' is the random individual [t+1 x n+4]
-function [indv] =  generateRandomIndividualBBBC(cMass, gen)
+function [indv] =  generateRandomIndividualBBBC(cMass, gen, targetsRObstacles)
     
     global op;  % optimization problem
     global bbbcs;
+
+
+    % if targetsRObstacles == true
+    %     n_targets = size(op.targets, 1);
+    %     obstacles_n_targets = zeros(size(op.obstacles, 1) + n_targets-1, 3);
+    %     obstacles_n_targets(1:size(op.obstacles, 1), :) = op.obstacles; 
+    % 
+    %     ownIndicePassed = false;
+    %     for k = 1:n_targets
+    %         if k == i
+    %             ownIndicePassed = true;
+    %             continue;
+    %         end
+    %         currObstc(1) = op.targets(k, 1);
+    %         currObstc(2) = op.targets(k, 2);
+    %         currObstc(3) = op.targets(k, 4);
+    %         if ownIndicePassed
+    %             obstacles_n_targets(size(op.obstacles, 1)+k-1, :) = currObstc;
+    %         else
+    %             obstacles_n_targets(size(op.obstacles, 1)+k, :) = currObstc;
+    %         end
+    %     end
+    % end
 
     % lengths are shared for each configuration of the robot, so it is generated only once
     lengths = zeros(1,op.n_nodes+4);
@@ -34,7 +57,13 @@ function [indv] =  generateRandomIndividualBBBC(cMass, gen)
                 % first link might be fixed to the base
                 if op.first_angle.is_fixed == false
                     if(bbbcs.obstacle_avoidance == true)
-                        angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false, gen, cMass, i, j);
+                        if targetsRObstacles
+                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                            angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-179 180], false, gen, cMass, i, j);
+                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                        else
+                            angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false, gen, cMass, i, j);
+                        end
                     else
                         % does not consider obstacle avoidance
                         angle = cMass(i,j) + (180*(-1 + (1--1)*rand()))/gen;
@@ -42,14 +71,26 @@ function [indv] =  generateRandomIndividualBBBC(cMass, gen)
                     end
                 else
                     if(bbbcs.obstacle_avoidance == true)
-                       angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false, gen, cMass, i, j);
+                        if targetsRObstacles
+                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                            angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false, gen, cMass, i, j);
+                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                        else
+                            angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false, gen, cMass, i, j);
+                        end
                     else
                        angle = op.first_angle.angle;  % does not consider obstacle avoidance
                     end
                 end
             else                
                  if(bbbcs.obstacle_avoidance==true)
-                     angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false, gen, cMass, i, j);
+                     if targetsRObstacles
+                         op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                        angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, op.angle_domain, false, gen, cMass, i, j);
+                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                     else
+                        angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false, gen, cMass, i, j);
+                     end
                  else
                      angle = cMass(i,j) + (op.angle_domain(2)*(-1 + (1--1)*rand()))/gen;
                      angle = max(min(angle, op.angle_domain(2)), op.angle_domain(1));

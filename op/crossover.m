@@ -7,19 +7,41 @@
 % OUTPUT: 
 % 'o1' is the chromosome of the first child [t+1 x n+4]
 % 'o2' is the chromosome of the second child [t+1 x n+4]
-function [o1, o2] = crossover(p1, p2)
+function [o1, o2] = crossover(p1, p2, targetsRObstacles)
     
     global op;  % optimization problem
     global gas; % genetic algorithm settings
     
+    % if targetsRObstacles == true
+    %     n_targets = size(op.targets, 1);
+    %     obstacles_n_targets = zeros(size(op.obstacles, 1) + n_targets-1, 3);
+    %     obstacles_n_targets(1:size(op.obstacles, 1), :) = op.obstacles; 
+    % 
+    %     ownIndicePassed = false;
+    %     for k = 1:n_targets
+    %         if k == i
+    %             ownIndicePassed = true;
+    %             continue;
+    %         end
+    %         currObstc(1) = op.targets(k, 1);
+    %         currObstc(2) = op.targets(k, 2);
+    %         currObstc(3) = op.targets(k, 4);
+    %         if ownIndicePassed
+    %             obstacles_n_targets(size(op.obstacles, 1)+k-1, :) = currObstc;
+    %         else
+    %             obstacles_n_targets(size(op.obstacles, 1)+k, :) = currObstc;
+    %         end
+    %     end
+    % end
+
     if rand() <= gas.crossover_probability
         % do crossover
         switch gas.crossover_method
             case 'blxa'
                 alpha = 0.5;
                 if(gas.obstacle_avoidance==true)
-                    o1 = blendCrossover_obstacleAvoidance(p1, p2, alpha);
-                    o2 = blendCrossover_obstacleAvoidance(p1, p2, alpha);
+                    o1 = blendCrossover_obstacleAvoidance(p1, p2, alpha,targetsRObstacles);
+                    o2 = blendCrossover_obstacleAvoidance(p1, p2, alpha,targetsRObstacles);
                 else
                     o1 = blendCrossover(p1, p2, alpha);
                     o2 = blendCrossover(p1, p2, alpha);
@@ -78,7 +100,7 @@ end
 
 
 %--------------BLX-ALPHA CROSSOVER WITH OBSTACLE AVOIDANCE--------------
-function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha)
+function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObstacles)
     global op;  % optimization problem
     global gas; % genetic algorithm settings
 
@@ -123,12 +145,24 @@ function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha)
                     
                 else
                     angle_bound=[minGene maxGene];
-                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                    if targetsRObstacles
+                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles_n_targets, angle_bound, false);
+                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                    else
+                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                    end
                     child(i,j) = angle;
                 end
             else
                 angle_bound=[minGene maxGene];
-                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                if targetsRObstacles
+                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles_n_targets, angle_bound, false);
+                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                else
+                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                end
                 
                 child(i,j) = angle;
                 

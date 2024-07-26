@@ -22,8 +22,9 @@ function node_click(app)
                 app.TargetCollisionRadiusEditField.Visible = "on";
                 app.TargetCollisionRadiusEditFieldLabel.Enable = "on";
                 app.TargetCollisionRadiusEditFieldLabel.Visible = "on";
-
-                createCollisionCircle(app, selectedNodes.NodeData);
+                app.TargetCollisionRadiusEditField.Value = num2str(selectedNodes.NodeData.radius);
+                
+                createCollisionCircle(app, app.Tree.SelectedNodes.NodeData);
 
             else
                 app.TargetCollisionRadiusEditField.Enable = "off";

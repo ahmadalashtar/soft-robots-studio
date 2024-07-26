@@ -5,7 +5,7 @@
 %
 % OUTPUT: 
 % 'fit_array', is a matrix with fitness values, composed of 'ik fitness', 'number of nodes', 'rank fitness', 'index in the pop array'[n_individuals x 4]
-function [pop, fit_array] = evaluate(pop)
+function [pop, fit_array] = evaluate(pop, targetsRObstacles)
     global op;  % optimization problem
     global gas; % genetic algorithm settings
     global bbbcs;
@@ -30,7 +30,7 @@ function [pop, fit_array] = evaluate(pop)
                 fit_array(i,gas.fitIdx.id) = i;
             end
             
-            fit_array = checkConstraints(pop, fit_array);
+            fit_array = checkConstraints(pop, fit_array, targetsRObstacles);
 
         case 'bbbc'
             fit_array = zeros(bbbcs.N,length(fieldnames(bbbcs.fitIdx)));
@@ -50,7 +50,7 @@ function [pop, fit_array] = evaluate(pop)
                 fit_array(i,bbbcs.fitIdx.id) = i;
             end
     
-            fit_array = checkConstraints(pop, fit_array);
+            fit_array = checkConstraints(pop, fit_array, targetsRObstacles);
             
     end  
     

@@ -8,7 +8,10 @@
 % OUTPUT:
 % 'result' is a boolean value, true if the segment intersects the obstacle, false otherwise
 function [result] = intersectObstacle_2D(s,o, draw_plot)
-    
+    if o(3) == 0
+        result = false;
+        return;
+    end
     % s(1,:) is segment end point 1 xy
     % s(2,:) is segment end point 2 xy
     % o(1:2) is obstacle xy

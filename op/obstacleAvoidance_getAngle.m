@@ -21,13 +21,16 @@ function [angle_range] = obstacleAvoidance_getAngle(end_effector, robot_orientat
         R = getRodriguesRotation(robot_orientation',[1 0 0]');  
         j = 1;
         for i=1:1:n_nearby_obstacles
+            if obstacles(nearby_obstacles(i),3) == 0
+                continue;
+            end
             o = [obstacles(nearby_obstacles(i),1:2) - end_effector 0];
             r = obstacles(nearby_obstacles(i),3);
             o = (R*o')';
             
             dist_from_obstacle = norm([0 0 0]-o);
             
-            %-------------INTERSECION SOLVER-----------------                
+            %-------------INTERSECION SOLVER-----------------      
             [xout,yout] = circcirc(0,0,dist_from_obstacle,o(1),o(2),r);
             p1 = [xout(1) yout(1)];
             p2 = [xout(2) yout(2)]; 
