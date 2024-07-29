@@ -8,7 +8,7 @@ sp.isSimulataneously = false;
 sp.heuristicLimit = 0.1;
 
 startTime = clock;
-sp.lengthMin = 15;
+sp.lengthMin = 5;
 [solution] = MP_searchAlgorithmV3(sp);
 [path, cost] = directExpansion2D(sp, realmax, sp.start_conf, sp.goal_conf);
 solution.path = pathConversion1_2D(solution.path);
