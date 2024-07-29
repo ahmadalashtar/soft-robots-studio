@@ -14,4 +14,6 @@ function disable_properties(app)
             app.Rotator.Enable="off";
             app.TargetCollisionRadiusEditFieldLabel.Enable = "off";
             app.TargetCollisionRadiusEditField.Enable = "off";
+            app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
+            app.TargetCollisionRadiusEditField.Visible = "off";
         end

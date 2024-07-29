@@ -7,6 +7,7 @@ function collectSP(app,from,to)
     app.sp.lengthMin = round(app.op.length_domain(1),3);
     app.sp.costArray = round(nextAnimation.NodeData.costArray,3);
     app.sp.stepSize =  round(nextAnimation.NodeData.stepSize,3);
+
     app.sp.obstacles = round(app.op.obstacles,3);
     app.sp.goals = round(app.OPTree.SelectedNodes.NodeData.configurations(:,:,to),3);
     app.sp.home_base = round(app.op.home_base,3);

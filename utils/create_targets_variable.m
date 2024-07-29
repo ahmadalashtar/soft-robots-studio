@@ -6,7 +6,7 @@ function create_targets_variable(app)
                 t_v(i,2)= nodes(i).NodeData.y;
                 t_v(i,3)= nodes(i).NodeData.angle;
                 if isstring(nodes(i).NodeData.radius) || ischar(nodes(i).NodeData.radius)
-                    t_v(i,4)= str2double(nodes(i).NodeData.radius);
+                    t_v(i,4)= nodes(i).NodeData.radius;
                 else
                     t_v(i,4)= nodes(i).NodeData.radius;
                 end

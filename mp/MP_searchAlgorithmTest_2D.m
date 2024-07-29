@@ -57,7 +57,7 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmTest_2D(sp, fringe
         tic
     
         expandedNodes = expandedNodes + 1;
-        if(fringeNode.h < 1)
+        if(fringeNode.h <= sp.heuristicLimit)
             if size(sp.goals, 1) ~= 0
                 sp.goals(1:sp.j, :) = [];
             end

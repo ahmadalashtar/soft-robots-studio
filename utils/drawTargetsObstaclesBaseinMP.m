@@ -13,7 +13,7 @@ function drawTargetsObstaclesBaseinMP(app)
     end
     % draw targets
     for i = 1:numel(selectedNode.NodeData.targets(:,1))
-        ps = draw_target(app,selectedNode.NodeData.targets(i,1),selectedNode.NodeData.targets(i,2),selectedNode.NodeData.targets(i,3),app.UIAxes2,app.scalerMP);
+        ps = draw_target(app,selectedNode.NodeData.targets(i,1),selectedNode.NodeData.targets(i,2),selectedNode.NodeData.targets(i,3),app.UIAxes2);
         data = struct("x",selectedNode.NodeData.targets(i,1),"y",selectedNode.NodeData.targets(i,2));
         ps.DataTipTemplate.DataTipRows(end)= selectedNode.NodeData.TargetNames(i);
         labelWithAngle(ps, selectedNode.NodeData.targets(i,3));

@@ -1,11 +1,11 @@
 function newDocument(app)
     resetOptions(app)
     remove_segment_lines(app)
-    disable_properties(app)
     
     children = app.UIAxes1.Children;
+
     for i = 1:length(children)
-        if children(i).UserData ~= "MinMax"
+        if ~isempty(children(i).UserData) && children(i).UserData ~= "MinMax"
             delete(children(i).UserData)
         end
         delete(children(i))

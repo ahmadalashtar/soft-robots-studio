@@ -7,4 +7,5 @@ function  resetOptions(app)
     app.MaxlengthEditField.Value = 0;
     app.FirstangleEditField.Value = 0;
     app.FixedfirstangleCheckBox.Value=false;
+    
 end

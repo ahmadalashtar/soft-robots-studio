@@ -5,9 +5,12 @@ global sp
 sp.j = size(sp.start_conf, 1);
 sp.goal_conf = sp.goals(1:sp.j, 1:2);
 sp.isSimulataneously = false;
+sp.heuristicLimit = 0.1;
 
 startTime = clock;
+sp.lengthMin = 15;
 [solution] = MP_searchAlgorithmV3(sp);
+[path, cost] = directExpansion2D(sp, realmax, sp.start_conf, sp.goal_conf);
 solution.path = pathConversion1_2D(solution.path);
 
 endTime = clock;

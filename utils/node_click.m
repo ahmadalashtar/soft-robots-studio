@@ -18,12 +18,12 @@ function node_click(app)
             app.LengthEditFieldLabel.Enable = "off";
 
             if selectedNodes.Parent == app.TargetsNode
+                app.TargetCollisionRadiusEditField.Value = selectedNodes.NodeData.radius;
                 app.TargetCollisionRadiusEditField.Enable = "on";
                 app.TargetCollisionRadiusEditField.Visible = "on";
                 app.TargetCollisionRadiusEditFieldLabel.Enable = "on";
                 app.TargetCollisionRadiusEditFieldLabel.Visible = "on";
-                app.TargetCollisionRadiusEditField.Value = num2str(selectedNodes.NodeData.radius);
-                
+
                 createCollisionCircle(app, app.Tree.SelectedNodes.NodeData);
 
             else
@@ -33,9 +33,9 @@ function node_click(app)
                 app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
             end
 
-            if app.genHold == -10
-                enable_properties(app, "target");
-            end
+
+            enable_properties(app, "target");
+            
 
             if selectedNodes.Parent == app.TargetsNode
                 if ishandle(app.figS) && (app.figS.Name ~= "Angle Changer: " + (string(app.Tree.SelectedNodes.NodeData.child.DataTipTemplate.DataTipRows(end).Label)))
@@ -66,9 +66,7 @@ function node_click(app)
             app.TargetCollisionRadiusEditFieldLabel.Enable = "off";
             app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
             app.Rotator.Enable = "off";
-            if app.genHold == -10
-                enable_properties(app, "obstacle");
-            end
+            enable_properties(app, "obstacle");
         end
     else
         % Deselect 

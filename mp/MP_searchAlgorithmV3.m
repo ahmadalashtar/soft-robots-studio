@@ -2,9 +2,6 @@ function solution = MP_searchAlgorithmV3(sp)
     spMod = sp;
     spMod.obstacles = [];
     [path, ~] = directExpansion2D(spMod, realmax, spMod.start_conf, spMod.goal_conf);
-
-    solution.path = path;
-    solution.g = 0;
     
     if isempty(path)
         solution = [];
@@ -12,7 +9,7 @@ function solution = MP_searchAlgorithmV3(sp)
         return;
     end
 
-    minLength = realmax;
+    minLength = sum(sp.goal_conf(:, 2));
     for i = 1:size(path, 2)
         configPos = MP_solveForwardKinematics2D(path{i}, sp.home_base, false);
         for j = 1:size(sp.obstacles, 1)
@@ -24,6 +21,27 @@ function solution = MP_searchAlgorithmV3(sp)
     end
 
     [retPath, ~] = pathToRetraction2D(sp, sp.start_conf, minLength);
+   
+    % Fixing unnecessary ret-grow.
+    lastRet = retPath{end};
+    lastExpanded = 1;
+    for lastExpanded = 2:size(lastRet, 1)
+        if lastRet(lastExpanded, 2) == 0
+            lastExpanded = lastExpanded - 1;
+            break;
+        end
+    end
+
+    if lastRet(lastExpanded, 2) < sp.lengthMin
+        for j = size(retPath, 2) - 1:-1:1
+            retConf = retPath{j};
+            if retConf(lastExpanded, 2) >= sp.lengthMin
+                retPath(j + 1:end) = [];
+                break;
+            end
+        end
+    end
+    %%%
 
     path = {};
     path{1} = retPath{end};
