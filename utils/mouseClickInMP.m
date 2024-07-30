@@ -22,7 +22,7 @@ function mouseClickInMP(app, src, tree)
     end
     
     
-    targetsAndBase = [node.NodeData.targets ; node.NodeData.base];
+    targetsAndBase = [node.NodeData.targets(:, 1:3) ; node.NodeData.base];
     speed = app.SpeedperFrame1secto0secSlider.Value;
     secondsToPause = (100-speed)/100;
     for from = 1 : numel(targetsAndBase(:,1))

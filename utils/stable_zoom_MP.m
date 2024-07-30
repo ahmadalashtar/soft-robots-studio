@@ -19,7 +19,7 @@ function stable_zoom_MP(app)
         end
         % draw targets
         for i = 1:numel(selectedNode.NodeData.targets(:,1))
-            ps = draw_target(app,selectedNode.NodeData.targets(i,1),selectedNode.NodeData.targets(i,2),selectedNode.NodeData.targets(i,3),app.UIAxes2,app.scalerMP);
+            ps = draw_target(app,selectedNode.NodeData.targets(i,1),selectedNode.NodeData.targets(i,2),selectedNode.NodeData.targets(i,3),app.UIAxes2);
             data = struct("x",selectedNode.NodeData.targets(i,1),"y",selectedNode.NodeData.targets(i,2));
             ps.UserData =data;
             ps.ButtonDownFcn = @(src,event)mouseClickInMP(app,src, false);
