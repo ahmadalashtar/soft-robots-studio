@@ -22,6 +22,10 @@ function node_click(app)
                         enable_properties(app,"target")
                     end
                     if selectedNodes.Parent == app.TargetsNode
+                        app.TargetCollisionRadiusEditField.Enable="on";
+                        app.TargetCollisionRadiusEditFieldLabel.Enable = "on";
+                        app.TargetCollisionRadiusEditField.Visible="on";
+                        app.TargetCollisionRadiusEditFieldLabel.Visible = "on";
                         if ishandle(app.figS) && (app.figS.Name ~= "Angle Changer: " + (string(app.Tree.SelectedNodes.NodeData.child.DataTipTemplate.DataTipRows(end).Label)))
                             figCloser(0, 0, app);
                         end
@@ -29,6 +33,10 @@ function node_click(app)
                             labelWithAngle(selectedNodes.NodeData.child, selectedNodes.NodeData.angle);
                         end
                     else
+                        app.TargetCollisionRadiusEditField.Enable="off";
+                        app.TargetCollisionRadiusEditFieldLabel.Enable = "off";
+                        app.TargetCollisionRadiusEditField.Visible="off";
+                        app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
                         if ishandle(app.figS) && (app.figS.Name ~= "Angle Changer: Base")
                             figCloser(0, 0, app);
                         end
@@ -38,6 +46,10 @@ function node_click(app)
                     if ishandle(app.figS)
                         figCloser(0, 0, app);
                     end
+                    app.TargetCollisionRadiusEditField.Enable="off";
+                    app.TargetCollisionRadiusEditFieldLabel.Enable = "off";
+                    app.TargetCollisionRadiusEditField.Visible="off";
+                    app.TargetCollisionRadiusEditFieldLabel.Visible = "off";
                     app.XcoordinateEditField.Value = selectedNodes.NodeData.x;
                     app.YcoordinateEditField.Value = selectedNodes.NodeData.y;
                     app.LengthEditField.Value = selectedNodes.NodeData.radius;
