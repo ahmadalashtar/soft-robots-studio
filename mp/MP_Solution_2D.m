@@ -8,7 +8,7 @@ sp.isSimulataneously = false;
 sp.heuristicLimit = 0.1;
 
 startTime = clock;
-sp.lengthMin = 15;
+sp.lengthMin = 9;
 [solution] = MP_searchAlgorithmV3(sp);
 [path, cost] = directExpansion2D(sp, realmax, sp.start_conf, sp.goal_conf);
 solution.path = pathConversion1_2D(solution.path);
@@ -21,7 +21,6 @@ if isempty(solution)
     result = [];
     return;
 end
-solution.g;
 
 % Calculate the number of submatrices you will create
 numSubMatrices = size(solution.path, 2) / 2;
