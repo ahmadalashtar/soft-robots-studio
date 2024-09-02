@@ -5,7 +5,7 @@
 %
 % OUTPUT: 
 % 'chrom' is the random chromosome [t+1 x n+4]
-function [chrom] =  generateRandomChromosome(targetsRObstacles)
+function [chrom] =  generateRandomChromosome(targetsRObstacles, robotMode)
     
     global op;  % optimization problem
     global gas;
@@ -43,7 +43,12 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles)
             end   
             
             n_targets = size(op.targets,1);
-            chrom = zeros(n_targets+1,op.n_nodes+4);    
+            chrom = zeros(n_targets+1,op.n_nodes+4);
+
+            if targetsRObstacles && robotMode == "Vacuum Robot"
+                tempObsNTargets = op.obstacles_n_targets;
+            end
+
             for i=1:1:n_targets        
                 
                 end_effector = op.home_base(1:2);
@@ -56,44 +61,135 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles)
                     if j==1
                         % first link might be fixed to the base
                         if op.first_angle.is_fixed == false
-                            if(gas.obstacle_avoidance == true)
-                                if targetsRObstacles
-                                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
-                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-179 180], false);
-                                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                                else
-                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false);
-                                end
-                            else
-                                angle = (180-(-179))*rand + (-179); % does not consider obstacle avoidance
+                            switch robotMode
+                                case "Touch Robot"
+                                    % How Touch Robot works:
+                                    % The current target is removed from the obstacle pool by setting
+                                    % everything about it to 0, including radius. After that
+                                    % calculate accordingly and add the target's values back to the 
+                                    % obstacle pool from the targets pool.
+                                    if(gas.obstacle_avoidance == true)
+                                        if targetsRObstacles
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-179 180], false);
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                        else
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false);
+                                        end
+                                    else
+                                        angle = (180-(-179))*rand + (-179); % does not consider obstacle avoidance
+                                    end
+                                case "Vacuum Robot"
+                                    % How Vacuum Robot works:
+                                    % The current target is removed from the obstacle pool by setting
+                                    % everything about it to 0, including radius. After that
+                                    % calculate accordingly. Target is not added back because
+                                    % it was vacuumed in.
+                                    % This mode is preferably for dust and
+                                    % flexible things that can be sucked in.
+                                    if(gas.obstacle_avoidance == true)
+                                        if targetsRObstacles
+                                            tempObsNTargets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, [-179 180], false);
+                                        else
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false);
+                                        end
+                                    else
+                                        angle = (180-(-179))*rand + (-179); % does not consider obstacle avoidance
+                                    end
+                                case "Carry Robot"
+                                    % How Carry Robot works:
+                                    % The Radius of the current target is added to every other obstacle.
+                                    % Basically increasing their radius.
+                                    % This is because the target being carried back can collide with the
+                                    % previous obstacles on the path.
+                                    % After, the current target is removed from the obstacle pool by setting
+                                    % everything about it to 0, including radius. After that
+                                    % calculate accordingly. Target is not added back because
+                                    % it was carried back.
+                                    if(gas.obstacle_avoidance == true)
+                                        if targetsRObstacles
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i,:,:), [-179 180], false);
+                                        else
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false);
+                                        end
+                                    else
+                                        angle = (180-(-179))*rand + (-179); % does not consider obstacle avoidance
+                                    end
                             end
                         else
-                            if(gas.obstacle_avoidance == true)
-                                if targetsRObstacles
-                                    op.obstacles_n_targets(size(op.obstacles,1) + i,1) = 0;
-                                    op.obstacles_n_targets(size(op.obstacles,1) + i,2) = 0;
-                                    op.obstacles_n_targets(size(op.obstacles,1) + i,3) = 0;
-                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
-                                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                                else
-                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
-                                end
-                            else
-                                angle = op.first_angle.angle;  % does not consider obstacle avoidance
+                            switch robotMode
+                                case "Touch Robot"
+                                    if(gas.obstacle_avoidance == true)
+                                        if targetsRObstacles
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                        else
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                        end
+                                    else
+                                        angle = op.first_angle.angle;  % does not consider obstacle avoidance
+                                    end
+                                case "Vacuum Robot"
+                                    if(gas.obstacle_avoidance == true)
+                                        if targetsRObstacles
+                                            tempObsNTargets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                        else
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                        end
+                                    else
+                                        angle = op.first_angle.angle;  % does not consider obstacle avoidance
+                                    end
+                                case "Carry Robot"
+                                    if(gas.obstacle_avoidance == true)
+                                        if targetsRObstacles
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                        else
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                        end
+                                    else
+                                        angle = op.first_angle.angle;  % does not consider obstacle avoidance
+                                    end
                             end
                         end
-                    else                
-                         if(gas.obstacle_avoidance==true)
-                             if targetsRObstacles
-                                op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, op.angle_domain, false);
-                                op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                             else
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);
-                             end
-                         else
-                             angle = (op.angle_domain(2)-op.angle_domain(1))*rand + op.angle_domain(1); % does not consider obstacle avoidance
-                         end
+                    else    
+                        switch robotMode
+                            case "Touch Robot"
+                                if(gas.obstacle_avoidance==true)
+                                    if targetsRObstacles
+                                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, op.angle_domain, false);
+                                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                    else
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);
+                                    end
+                                else
+                                    angle = (op.angle_domain(2)-op.angle_domain(1))*rand + op.angle_domain(1); % does not consider obstacle avoidance
+                                end
+                            case "Vacuum Robot"
+                                if(gas.obstacle_avoidance==true)
+                                    if targetsRObstacles
+                                        tempObsNTargets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, op.angle_domain, false);
+                                    else
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);
+                                    end
+                                else
+                                    angle = (op.angle_domain(2)-op.angle_domain(1))*rand + op.angle_domain(1); % does not consider obstacle avoidance
+                                end
+                            case "Carry Robot"
+                                if(gas.obstacle_avoidance==true)
+                                    if targetsRObstacles
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i,:,:), op.angle_domain, false);
+                                    else
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);
+                                    end
+                                else
+                                    angle = (op.angle_domain(2)-op.angle_domain(1))*rand + op.angle_domain(1); % does not consider obstacle avoidance
+                                end
+                        end
                     end
                     robot(j) = angle;
                     
@@ -117,7 +213,12 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles)
             end   
             
             n_targets = size(op.targets,1);
-            chrom = zeros(n_targets+1,op.n_nodes+4);    
+            chrom = zeros(n_targets+1,op.n_nodes+4);  
+
+            if targetsRObstacles && robotMode == "Vacuum Robot"
+                tempObsNTargets = op.obstacles_n_targets;
+            end
+
             for i=1:1:n_targets        
                 
                 end_effector = op.home_base(1:2);
@@ -131,26 +232,63 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles)
                         % first link might be fixed to the base
                         if op.first_angle.is_fixed == false
                             if(bbbcs.obstacle_avoidance == true)
-                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-179 180], false);
-                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                if targetsRObstacles
+                                    switch robotMode
+                                        case "Touch Robot"
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-179 180], false);
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                        case "Vacuum Robot"
+                                            tempObsNTargets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, [-179 180], false);
+                                        case "Carry Robot"
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i,:,:), [-179 180], false);
+                                    end
+
+                                else
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179 180], false);
+                                end
                             else
                                 angle = (180-(-179))*rand + (-179); % does not consider obstacle avoidance
                             end
                         else
                             if(bbbcs.obstacle_avoidance == true)
-                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
-                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                if targetsRObstacles
+                                    switch robotMode
+                                        case "Touch Robot"
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                            op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                        case "Vacuum Robot"
+                                            tempObsNTargets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                        case "Carry Robot"
+                                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i,:,:), [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                    end
+                                else
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-abs(op.first_angle.angle) abs(op.first_angle.angle)], false);
+                                end
                             else
                                angle = op.first_angle.angle;  % does not consider obstacle avoidance
                             end
                         end
                     else                
                          if(bbbcs.obstacle_avoidance==true)
-                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, op.angle_domain, false);
-                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                             if targetsRObstacles
+                                 switch robotMode
+                                     case "Touch Robot"
+                                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles_n_targets, op.angle_domain, false);
+                                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                                     case "Vacuum Robot"
+                                        tempObsNTargets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, op.angle_domain, false);
+                                     case "Carry Robot"
+                                        angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i,:,:), op.angle_domain, false);
+                                 end
+                             else
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);
+                             end
                          else
                              angle = (op.angle_domain(2)-op.angle_domain(1))*rand + op.angle_domain(1); % does not consider obstacle avoidance
                          end

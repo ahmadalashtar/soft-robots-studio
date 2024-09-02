@@ -5,7 +5,7 @@
 %
 % OUTPUT: 
 % 'pop' is the random population [t+1 x n+4 x n_individuals]
-function [pop] = initializeRandomPopulation(targetsRObstacles)
+function [pop] = initializeRandomPopulation(targetsRObstacles, robotMode)
     global op;  % optimization problem
     global gas; % genetic algorithm settings
     global bbbcs; % big bang - big crunch algorithm settings
@@ -16,14 +16,14 @@ function [pop] = initializeRandomPopulation(targetsRObstacles)
             % declare a static array of chromosomes filled with zeros
             pop = zeros(size(op.targets,1)+1,op.n_nodes+gas.extra_genes,gas.n_individuals);
             for i=1:1:gas.n_individuals
-                chrom = generateRandomChromosome(targetsRObstacles);   
+                chrom = generateRandomChromosome(targetsRObstacles, robotMode);   
                 pop(:,:,i) = chrom;
             end
         case 'bbbc'
             % declare a static array of individuals filled with zeros
             pop = zeros(size(op.targets,1)+1,op.n_nodes+bbbcs.extra_genes,bbbcs.N);
             for i=1:1:bbbcs.N
-                indv = generateRandomChromosome(targetsRObstacles);   
+                indv = generateRandomChromosome(targetsRObstacles, robotMode);   
                 pop(:,:,i) = indv;
             end
             

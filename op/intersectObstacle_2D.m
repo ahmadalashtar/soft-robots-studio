@@ -8,10 +8,19 @@
 % OUTPUT:
 % 'result' is a boolean value, true if the segment intersects the obstacle, false otherwise
 function [result] = intersectObstacle_2D(s,o, draw_plot)
-    if o(3) == 0
+    if ndims(o) == 3
+        % o can be a 1x1x3 matrix in the case of a carry robot, if it is
+        % we squeeze and reshape it to be 1x3
+        o_1x3 = reshape(squeeze(o), 1, []);
+    else
+        % if o is already a 1x3 matrix, we just assign it directly
+        o_1x3 = o;
+    end
+    if o_1x3(3) == 0
         result = false;
         return;
     end
+
     % s(1,:) is segment end point 1 xy
     % s(2,:) is segment end point 2 xy
     % o(1:2) is obstacle xy
@@ -26,19 +35,19 @@ function [result] = intersectObstacle_2D(s,o, draw_plot)
         plot([s(1,1),s(2,1)],[s(1,2),s(2,2)],'-o','Color','r');
         
         th = 0:pi/50:2*pi;
-        xunit = o(3) * cos(th) + o(1);
-        yunit = o(3) * sin(th) + o(2);
+        xunit = o_1x3(3) * cos(th) + o_1x3(1);
+        yunit = o_1x3(3) * sin(th) + o_1x3(2);
         plot(xunit, yunit,'Color','r');
         
     end
     
     % some interesting math happening here
-    dist_segment = point2segment_2D(o(1:2), s(1,:), s(2,:), o(3)+1);
+    dist_segment = point2segment_2D(o_1x3(1:2), s(1,:), s(2,:), o_1x3(3)+1);
     
-    dist_e1 = norm(s(1,:)-o(1:2));
-    dist_e2 = norm(s(2,:)-o(1:2));
+    dist_e1 = norm(s(1,:)-o_1x3(1:2));
+    dist_e2 = norm(s(2,:)-o_1x3(1:2));
     
-    if dist_segment <= o(3) || dist_e1 <= o(3) || dist_e2 <= o(3)
+    if dist_segment <= o_1x3(3) || dist_e1 <= o_1x3(3) || dist_e2 <= o_1x3(3)
         result = true;
     else
         result = false;

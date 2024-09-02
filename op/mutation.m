@@ -5,7 +5,7 @@
 %
 % OUTPUT: 
 % 'chrom' is the mutated chromosome [t+1 x n+4]
-function [chrom] = mutation(chrom, targetsRObstacles)
+function [chrom] = mutation(chrom, targetsRObstacles, robotMode)
     
     global op;  % optimization problem
     global gas; % genetic algorithm settings
@@ -36,11 +36,11 @@ function [chrom] = mutation(chrom, targetsRObstacles)
         % do mutation
         switch gas.mutation_method
             case 'random'
-                chrom = randomMutation(targetsRObstacles);
+                chrom = randomMutation(targetsRObstacles, robotMode);
             case 'modifiedRandomMutation'
-                chrom = modifiedRandomMutation(chrom, targetsRObstacles);
+                chrom = modifiedRandomMutation(chrom, targetsRObstacles, robotMode);
             case 'polynomial'
-                chrom = polynomialMutation(chrom);
+                chrom = polynomialMutation(chrom, robotMode);
             otherwise
                 error('Unexpected Mutation Method.');
         end
@@ -50,13 +50,13 @@ end
 
 %--------------RANDOM MUTATION--------------
 
-function [chrom] = randomMutation(targetsRObstacles)
-    chrom = generateRandomChromosome(targetsRObstacles);
+function [chrom] = randomMutation(targetsRObstacles, robotMode)
+    chrom = generateRandomChromosome(targetsRObstacles, robotMode);
 end
 
 %--------------MODIFIED RANDOM MUTATION--------------
 
-function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles)
+function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles, robotMode)
     global op;  % optimization problem
     global gas; % genetic algorithm settings
     targets= size(chrom,1)-1;
@@ -78,6 +78,10 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles)
 
     max_perturbation= (bounds_angle(2)-bounds_angle(1))/2;
     
+    if targetsRObstacles && robotMode == "Vacuum Robot"
+        tempObsNTargets = op.obstacles_n_targets;
+    end
+
     for i=1: 1:targets
         end_effector = op.home_base(1:2);
         robot_orientation = [1 0];
@@ -86,13 +90,52 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles)
             if j==1
                 if op.first_angle.is_fixed==false
                     angle_bound= [chrom(i,j)-(max_perturbation/2) chrom(i,j)+(max_perturbation/2)] ;
-                    if targetsRObstacles
-                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
-                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles_n_targets, angle_bound, false);
-                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                    else
-                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+
+                    switch robotMode
+                        case "Touch Robot"
+                            % How Touch Robot works:
+                            % The current target is removed from the obstacle pool by setting
+                            % everything about it to 0, including radius. After that
+                            % calculate accordingly and add the target's values back to the 
+                            % obstacle pool from the targets pool.
+                            if targetsRObstacles
+                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles_n_targets, angle_bound, false);
+                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                            end
+                        case "Vacuum Robot"
+                            % How Vacuum Robot works:
+                            % The current target is removed from the obstacle pool by setting
+                            % everything about it to 0, including radius. After that
+                            % calculate accordingly. Target is not added back because
+                            % it was vacuumed in.
+                            % This mode is preferably for dust and
+                            % flexible things that can be sucked in.
+                            if targetsRObstacles
+                                tempObsNTargets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, tempObsNTargets, angle_bound, false);
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                            end
+                        case "Carry Robot"
+                            % How Carry Robot works:
+                            % The Radius of the current target is added to every other obstacle.
+                            % Basically increasing their radius.
+                            % This is because the target being carried back can collide with the
+                            % previous obstacles on the path.
+                            % After, the current target is removed from the obstacle pool by setting
+                            % everything about it to 0, including radius. After that
+                            % calculate accordingly. Target is not added back because
+                            % it was carried back.
+                            if targetsRObstacles
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                            end
                     end
+
                     angle=max(min(bounds_angle(2),angle),bounds_angle(1));
                     chrom(i,j)=angle;
 %                    chrom(i,j)=op.first_angle.angle;% don't mutate
@@ -105,12 +148,28 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles)
                     chrom(i,j) = max(min(bounds_angle(2),chrom(i,j)),bounds_angle(1));
                 else
                     angle_bound= [chrom(i,j)-(max_perturbation/2) chrom(i,j)+(max_perturbation/2)] ;
-                    if targetsRObstacles
-                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
-                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles_n_targets, angle_bound, false);
-                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                    else
-                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                    switch robotMode
+                        case "Touch Robot"
+                            if targetsRObstacles
+                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles_n_targets, angle_bound, false);
+                                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                            end
+                        case "Vacuum Robot"
+                            if targetsRObstacles
+                                tempObsNTargets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, tempObsNTargets, angle_bound, false);
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                            end
+                        case "Carry Robot"
+                            if targetsRObstacles
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index,j), bounds_length, op.obstacles, angle_bound, false);
+                            end
                     end
                     angle=max(min(bounds_angle(2),angle),bounds_angle(1));
                     chrom(i,j)=angle;

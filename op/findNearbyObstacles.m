@@ -16,7 +16,6 @@ function [nearby_obstacle_indices] = findNearbyObstacles(node, link_length, min_
         d = norm(node-obstacles(i,1:2)) - (obstacles(i,3) + min_length);        % ok so with this formula, 'd' is supposed to be the distance between the minimum length of the link (lower bound) 
                                                                                 % and the circumference of the obstacle. 
                                                                                 
-                                                                                
         
         %d = norm(node-obstacles(i,1:2)) - (obstacles(i,3));    % so this would have been just the distance between the node and the circumference
         

@@ -7,7 +7,7 @@
 % OUTPUT: 
 % 'o1' is the chromosome of the first child [t+1 x n+4]
 % 'o2' is the chromosome of the second child [t+1 x n+4]
-function [o1, o2] = crossover(p1, p2, targetsRObstacles)
+function [o1, o2] = crossover(p1, p2, targetsRObstacles, robotMode)
     
     global op;  % optimization problem
     global gas; % genetic algorithm settings
@@ -40,8 +40,8 @@ function [o1, o2] = crossover(p1, p2, targetsRObstacles)
             case 'blxa'
                 alpha = 0.5;
                 if(gas.obstacle_avoidance==true)
-                    o1 = blendCrossover_obstacleAvoidance(p1, p2, alpha,targetsRObstacles);
-                    o2 = blendCrossover_obstacleAvoidance(p1, p2, alpha,targetsRObstacles);
+                    o1 = blendCrossover_obstacleAvoidance(p1, p2, alpha,targetsRObstacles, robotMode);
+                    o2 = blendCrossover_obstacleAvoidance(p1, p2, alpha,targetsRObstacles, robotMode);
                 else
                     o1 = blendCrossover(p1, p2, alpha);
                     o2 = blendCrossover(p1, p2, alpha);
@@ -100,7 +100,7 @@ end
 
 
 %--------------BLX-ALPHA CROSSOVER WITH OBSTACLE AVOIDANCE--------------
-function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObstacles)
+function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObstacles, robotMode)
     global op;  % optimization problem
     global gas; % genetic algorithm settings
 
@@ -115,6 +115,12 @@ function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObsta
     for j=1:1:op.n_nodes
         child(ll_index,j) = blendValues(p1(ll_index,j),p2(ll_index,j),alpha,op.length_domain,false);
     end
+    if targetsRObstacles && robotMode == "Vacuum Robot"
+        tempObsNTargets = op.obstacles_n_targets;
+    end
+    % if targetsRObstacles && robotMode ~= "Touch Robot"
+    %     tempObsNTargets = op.obstacles_n_targets;
+    % end
     
     for i=1:1:n_targets
 
@@ -145,23 +151,55 @@ function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObsta
                     
                 else
                     angle_bound=[minGene maxGene];
-                    if targetsRObstacles
-                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
-                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles_n_targets, angle_bound, false);
-                        op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                    else
-                        angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                    switch robotMode
+                        case "Touch Robot"
+                            if targetsRObstacles
+                                op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles_n_targets, angle_bound, false);
+                                op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                            end
+                        case "Vacuum Robot"
+                            if targetsRObstacles
+                                tempObsNTargets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, tempObsNTargets, angle_bound, false);
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                            end
+                        case "Carry Robot"
+                            if targetsRObstacles
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.carriable_o_n_t(i,:,:), angle_bound, false);
+                            else
+                                angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                            end
                     end
                     child(i,j) = angle;
                 end
             else
                 angle_bound=[minGene maxGene];
-                if targetsRObstacles
-                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
-                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles_n_targets, angle_bound, false);
-                    op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
-                else
-                    angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                switch robotMode
+                    case "Touch Robot"
+                        if targetsRObstacles
+                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                            angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles_n_targets, angle_bound, false);
+                            op.obstacles_n_targets(size(op.obstacles,1) + i, :) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                        else
+                            angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                        end
+                    case "Vacuum Robot"
+                        if targetsRObstacles
+                            tempObsNTargets(size(op.obstacles,1) + i, :) = [0, 0, 0];
+                            angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, tempObsNTargets, angle_bound, false);
+                        else
+                            angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                        end
+                    case "Carry Robot"
+                        if targetsRObstacles
+                            angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.carriable_o_n_t(i,:,:), angle_bound, false);
+                        else
+                            angle=getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index,j), op.length_domain, op.obstacles, angle_bound, false);
+                        end
                 end
                 
                 child(i,j) = angle;

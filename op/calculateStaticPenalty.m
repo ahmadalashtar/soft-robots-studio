@@ -1,5 +1,5 @@
 %--------------STATIC PENALTY METHOD--------------
-function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles)          
+function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMode)          
     global op;  % optimization problem
     global gas; % genetic algorithm settings
     global bbbcs;
@@ -12,6 +12,10 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles)
     min_angle = op.angle_domain(1);
     max_angle = op.angle_domain(2);
     min_length = op.length_domain(1);
+    
+    if targetsRObstacles && robotMode == "Vacuum Robot"
+        tempObsNTargets = op.obstacles_n_targets;
+    end
 
     for i = 1:1:n_targets
         final_angle = chrom(i,n_nodes+2);
@@ -66,15 +70,39 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles)
             %     end
             % end
             if targetsRObstacles
-                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
-                nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles_n_targets);  
-                n_nearby_obstacles = size(nearby_obstacles,2);
-                for z=1:1:n_nearby_obstacles
-                    if intersectObstacle_2D([p_start; p_end],op.obstacles_n_targets(nearby_obstacles(z),:),false)
-                        intersections = intersections + 1;
-                    end
+                switch robotMode
+                    case "Touch Robot"
+                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles_n_targets);  
+                        n_nearby_obstacles = size(nearby_obstacles,2);
+                        for z=1:1:n_nearby_obstacles
+                            if intersectObstacle_2D([p_start; p_end],op.obstacles_n_targets(nearby_obstacles(z),:),false)
+                                intersections = intersections + 1;
+                            end
+                        end
+                        op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+                    case "Vacuum Robot"
+                        tempObsNTargets(size(op.obstacles,1) + i,:) = [0, 0, 0];
+                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), tempObsNTargets);  
+                        n_nearby_obstacles = size(nearby_obstacles,2);
+                        for z=1:1:n_nearby_obstacles
+                            if intersectObstacle_2D([p_start; p_end],tempObsNTargets(nearby_obstacles(z),:),false)
+                                intersections = intersections + 1;
+                            end
+                        end
+                    case "Carry Robot"
+                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.carriable_o_n_t(i,:,:));  
+                        n_nearby_obstacles = size(nearby_obstacles,2);
+                        for z=1:1:n_nearby_obstacles
+                            if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0
+                                continue;
+                            end
+                            if intersectObstacle_2D([p_start; p_end], op.carriable_o_n_t(i,nearby_obstacles(z),:),false)
+                                intersections = intersections + 1;
+                            end
+                        end
                 end
-                op.obstacles_n_targets(size(op.obstacles,1) + i,:) = [op.targets(i,1), op.targets(i,2), op.targets(i,4)];
+
             else
                 nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles);  
                 n_nearby_obstacles = size(nearby_obstacles,2);
