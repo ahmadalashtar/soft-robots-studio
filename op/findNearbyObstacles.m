@@ -9,6 +9,9 @@
 % OUTPUT:
 % 'nearby_obstacle_indices' is a [1xo] containing the indices with respect to the matrix op.obstacles
 function [nearby_obstacle_indices] = findNearbyObstacles(node, link_length, min_length, obstacles)
+    if ndims(obstacles) == 3
+        obstacles= squeeze(permute(obstacles, [2, 3, 1]));
+    end
     n_obstacles = size(obstacles,1);
     nearby_obstacle_indices = zeros(1,n_obstacles);
     n_nearby_obstacles = 0;

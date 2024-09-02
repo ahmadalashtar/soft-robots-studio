@@ -13,6 +13,9 @@
 % OUTPUT:
 % 'angle' is the angle in degree generated with collision avoidance
 function [angle] = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, link_length, length_domain, obstacles, angle_domain, draw_plot)
+    if ndims(obstacles) == 3
+        obstacles= squeeze(permute(obstacles, [2, 3, 1]));
+    end
     angleBound = obstacleAvoidance_getAngle(end_effector, robot_orientation, link_length, length_domain, obstacles, angle_domain, draw_plot);
     if size(angleBound,1)>1
         randAngles = zeros(size(angleBound,1),1);
