@@ -120,7 +120,10 @@ function [solution, expandedNodes, times] = MP_searchAlgorithmTest_2D(sp, fringe
         end
         
         tic
+        
+        s1 = PDQ_test("size", instanceId);
         PDQ_test("expandHead", instanceId, nextChildren);
+        s2 = PDQ_test("size", instanceId);
         time = toc;
         times.fringe = times.fringe + time;
         if PDQ_test("size", instanceId) == 0
