@@ -5,9 +5,9 @@ function create_carry_targets_obstacles_variable(app)
         ot_v(z, 1:size(app.op.obstacles, 1), :) = app.op.obstacles;
         ot_v(z, 1:size(app.op.obstacles, 1), 3) = ot_v(z, 1:size(app.op.obstacles, 1), 3) + app.op.targets(z,4);
         for k = z:n_targets-1
-            currObstc(1) = app.op.targets(k, 1);
-            currObstc(2) = app.op.targets(k, 2);
-            currObstc(3) = app.op.targets(k, 4) + app.op.targets(z,4);
+            currObstc(1) = app.op.targets(k+1, 1);
+            currObstc(2) = app.op.targets(k+1, 2);
+            currObstc(3) = app.op.targets(k+1, 4) + app.op.targets(z,4);
             ot_v(z, size(app.op.obstacles, 1)+k, :) = currObstc;
         end
     end
