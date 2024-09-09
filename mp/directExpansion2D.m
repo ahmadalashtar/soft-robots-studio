@@ -1,44 +1,21 @@
 function [path, cost] = directExpansion2D(sp, step_size, start_conf, end_conf)
-    sp.goal_conf = end_conf;
-
-    node1.path = start_conf;
-    node1.g = 0;
-    
-    % Retract first.
-    % [path, cost] = pathToRetraction2D(sp, start_conf, sum(end_conf(:, 2)));
-    % 
-    % if (size(path, 2) - 1) >= step_size
-    %     path = path(1:step_size + 1);
-    %     cost = costOfPath2D(sp, path);
-    %     return;
-    % end
-    % 
-    % node1.path = path{end};
-    % node1.g = cost;
-    % node1.h = MP_getHeuristic_2D(sp.typeOfHeuristic, node1.path, sp);
-    % node1.f = MP_calculateCostBasedOnAlgorithm(node1.g, node1.h, sp.typeOfAlg);
-    
-    % Does not retract first
     path = {start_conf};
-    cost = 0;
-    node1.path = start_conf;
-    node1.g = 0;
-    node1.h = MP_getHeuristic_2D(sp.typeOfHeuristic, node1.path, sp);
-    node1.f = MP_calculateCostBasedOnAlgorithm(node1.g, node1.h, sp.typeOfAlg);
+    config = start_conf;
+    while MP_getHeuristic_2D(sp.typeOfHeuristic, config, sp) > sp.heuristicLimit && (size(path, 2) - 1) < step_size
+        config = greedyExpand2D(sp, config, end_conf);
 
-    while node1.h > sp.heuristicLimit && (size(path, 2) - 1) < step_size
-        node1 = MP_greedyExpand_2D(node1, sp);
+        if isempty(config)
+            cost = costOfPath2D(sp, path);
+            return;
+        elseif MP_collisionCheck_2D(config, sp)
 
-        if isempty(node1) || MP_collisionCheck_2D(node1.path(:, end - 1:end), sp) 
-            
-           % Controls if obstacles in front of the random node is considered or not (Fix this). 
-           path = {};
-           cost = -1;
-           return;
+            path = {};
+            cost = -1;
+            return;
         end
 
-        node1.path = node1.path(:, end - 1:end);
-        cost = node1.g;
-        path = [path, node1.path];
+        path = [path, config];
     end
+
+    cost = costOfPath2D(sp, path);
 end
