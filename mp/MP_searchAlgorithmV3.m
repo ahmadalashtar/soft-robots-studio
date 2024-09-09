@@ -25,7 +25,7 @@ function solution = MP_searchAlgorithmV3(sp)
     end
 
     % Attempt to fix the last link to make it a valid configuration.
-    retLastExpanded = -1;
+    retLastExpanded = 1;
     retConfig = zeros(sp.j, 2);
     for i = 1:size(retConfig, 1)
         minLength = minLength - sp.start_conf(i, 2);
