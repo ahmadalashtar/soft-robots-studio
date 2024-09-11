@@ -38,15 +38,17 @@ function solution = MP_searchAlgorithmV3(sp)
         retConfig(i, :) = sp.start_conf(i, :);
     end
 
-    if retConfig(retLastExpanded, 2) < sp.lengthMin && ~isequal(retConfig(retLastExpanded, 1), 0)
-        retConfig(retLastExpanded, :) = 0;
-    end
     minLength = sum(retConfig(:, 2));
+    growConfig = setConfigLength(sp.goal_conf, minLength);
+
+    if retConfig(retLastExpanded, 2) < sp.lengthMin && (~isequal(retConfig(retLastExpanded, 1), 0) || ~isequal(growConfig(retLastExpanded, 1), 0))
+        retConfig(retLastExpanded, :) = 0;
+        growConfig(retLastExpanded, :) = 0;
+    end
 
     [retPath, ~] = directExpansion2D(sp, realmax, sp.start_conf, retConfig);
 
     retConfig = retPath{end};
-    growConfig = setConfigLength(sp.goal_conf, minLength);
     path = directExpansion2D(spMod, realmax, retConfig, growConfig);
 
     path = [retPath, path];
