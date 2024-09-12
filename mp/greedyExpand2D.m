@@ -15,6 +15,10 @@ retract because it first need to steer to some position, then it will
 perform steering action in the name of 'Retraction'.
 %}
 function config = greedyExpand2D(sp, config, goal)
+    if ~(checkConfig(sp, config) && checkConfig(sp, goal))
+        error("Configurations are not correct.");
+    end
+
     diffLength = sum(goal(:, 2)) - sum(config(:, 2));
     lastExpanded = -1;
     for i = size(config, 1):-1:1
@@ -38,12 +42,12 @@ function config = greedyExpand2D(sp, config, goal)
             end
             config(lastExpanded, 1) = config(lastExpanded, 1) + angleAmount;
         else
-            config = retract(config, -retAmount);
+            config = retract(sp, config, -retAmount);
         end
     elseif ~isequal(diffAngles, zeros(lastExpanded, 1))
         %Steering
 
-        if config(lastExpanded, 2) < sp.lengthMin && ~isequal(config(lastExpanded, 1), 0)
+        if config(lastExpanded, 2) < sp.lengthMin && ~isequal(config(lastExpanded, 1) - goal(lastExpanded, 1), 0)
             growAmount = sp.lengthMin - config(lastExpanded, 2);
             growAmount = min(sp.stepSize(2), growAmount);
 
