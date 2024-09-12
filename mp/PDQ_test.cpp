@@ -181,15 +181,23 @@ class MexFunction : public matlab::mex::Function {
         }
 
         void destroyAll() {
-            for (auto instanceIt : activeHeaps) {
-                destroy(instanceIt.first); 
+            for (int i = 1; i <= 10; i++) {
+                destroy(i);
             }
+            //for (auto instanceIt : activeHeaps) {
+            //    destroy(instanceIt.first); 
+            //}
+            
 
             activeHeaps.clear();
             activeSets.clear();
         }
 
         void destroy(unsigned int id) {
+            if (activeHeaps.find(id) == activeHeaps.end()) {
+                return;
+            }
+            
             auto& heap {activeHeaps[id]};
             auto& duplicateSet {activeSets[id]};
 

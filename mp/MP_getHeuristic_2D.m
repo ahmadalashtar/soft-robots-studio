@@ -1,8 +1,8 @@
-function [h] = MP_getHeuristic_2D(typeOfHeuristic, currentMat, searchProblem)
+function [h] = MP_getHeuristic_2D(typeOfHeuristic, config, searchProblem)
       switch typeOfHeuristic
           case 'discrete'
-            h = MP_calculateHeuristic(currentMat, searchProblem);
+            h = MP_calculateHeuristic(config, searchProblem);
           case 'continue'
-            h = MP_calculateCost_2D(currentMat, searchProblem.goal_conf, searchProblem.home_base);
+            h = MP_calculateCost_2D(config, searchProblem.goal_conf, searchProblem.home_base);
       end
 end

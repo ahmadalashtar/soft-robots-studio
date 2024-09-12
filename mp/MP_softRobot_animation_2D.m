@@ -7,6 +7,8 @@
 % DISCLAIMER:
 % It must me updated to draw obstacles when we will add any in the future
 function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles, axes,secondsToPause)
+
+    backgroundColor = 'w';
     % --- Example of commands, remove this piece of code for real usage ----
 %     commands = zeros(3,3,10);
 %     for i=1:1:10
@@ -29,59 +31,60 @@ function MP_softRobot_animation_2D(app,commands, home_base, drawPath, obstacles,
     
     n_obstacles = size(obstacles,1);
     hold(axes,"on");
+
+    cla(axes)
+
+    drawTargetsObstaclesBaseinMP(app);
+    draw_segments_MP(app,app.UIAxes2,app.MPTree.SelectedNodes);
+
+    % xlim(axes,[-600 600]);
+    % ylim(axes,[-400 400]);
+    plot(axes,home_base(1),home_base(2),'--gs','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','b'); %draw home
+    startConf = MP_solveForwardKinematics2D(commands(:,:,1),home_base,false, app.BaseNode.Children(1).NodeData.angle);
+    endConf = MP_solveForwardKinematics2D(commands(: , : , end),home_base,false,app.BaseNode.Children(1).NodeData.angle);
+
+    %draw the start configuration
+    grayRobotColor = '#569c69';
+    for i=2:1:n_joints+1
+        plot(axes,[startConf(i-1,1),startConf(i,1)],[startConf(i-1,2),startConf(i,2)],'-o','Color',grayRobotColor, 'LineWidth', 1.5, 'Tag', "AnimPiece");
+    end
+
+    for i=2:1:n_joints+1
+        plot(axes,[endConf(i-1,1),endConf(i,1)],[endConf(i-1,2),endConf(i,2)],'-o','Color','b', 'LineWidth', 1.5, 'Tag', "AnimPiece");
+    end
+
+
+    for i = 1:1:n_obstacles
+        theta = linspace(0, 2*pi,100);
+        X = obstacles(i, 3) * cos(theta) + obstacles(i, 1);
+        Y = obstacles(i, 3) * sin(theta) + obstacles(i, 2);
+        plot(axes,X, Y, 'k');
+    end
+    
+    robot_CC = [];
     for k=1:1:steps
         pause(secondsToPause)
-        cla(axes)
 
-        drawTargetsObstaclesBaseinMP(app);
-        draw_segments_MP(app,app.UIAxes2,app.MPTree.SelectedNodes);
-
-        % xlim(axes,[-600 600]);
-        % ylim(axes,[-400 400]);
-        plot(axes,home_base(1),home_base(2),'--gs','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','b'); %draw home
-        startConf = MP_solveForwardKinematics2D(commands(:,:,1),home_base,false, app.BaseNode.Children(1).NodeData.angle);
-        endConf = MP_solveForwardKinematics2D(commands(: , : , end),home_base,false,app.BaseNode.Children(1).NodeData.angle);
-        robot_CC = MP_solveForwardKinematics2D(commands(:,:,k),home_base,false,app.BaseNode.Children(1).NodeData.angle); %solve the forward kinematics for a given robot configuration
-        
-        % collect the end effector coordinates for each step of motion to draw the path of the robot 
-        end_effectors(k,:) = robot_CC(n_joints+1,:); 
-        
-        %draw the start configuration
-        grayRobotColor = '#569c69';
-        for i=2:1:n_joints+1
-            plot(axes,[startConf(i-1,1),startConf(i,1)],[startConf(i-1,2),startConf(i,2)],'-o','Color',grayRobotColor, 'LineWidth', 1.5, 'Tag', "AnimPiece");
-        end
-
-        for i=2:1:n_joints+1
-            plot(axes,[endConf(i-1,1),endConf(i,1)],[endConf(i-1,2),endConf(i,2)],'-o','Color','b', 'LineWidth', 1.5, 'Tag', "AnimPiece");
-        end
-        % draws the soft robot
-        for i=2:1:n_joints+1
-            plot(axes,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color','r', 'LineWidth', 1.5, 'Tag', "AnimPiece");
-        end
-        
-        % draws the path from the end effector array
-        if drawPath == true
-            for j=1:3:k
-                    plot(axes,end_effectors(j,1),end_effectors(j,2),'.','Color','b');
+        if ~isempty(robot_CC)
+            for i=2:1:n_joints+1
+                plot(axes,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color', backgroundColor, 'LineWidth', 1.5, 'Tag', "AnimPiece");
             end
         end
 
+        robot_CC = MP_solveForwardKinematics2D(commands(:,:,k),home_base,false,app.BaseNode.Children(1).NodeData.angle); %solve the forward kinematics for a given robot configuration
 
-        for i = 1:1:n_obstacles
-            theta = linspace(0, 2*pi,100);
-            X = obstacles(i, 3) * cos(theta) + obstacles(i, 1);
-            Y = obstacles(i, 3) * sin(theta) + obstacles(i, 2);
-            plot(axes,X, Y, 'k');
-
+        for i=2:1:n_joints+1
+            plot(axes,[robot_CC(i-1,1),robot_CC(i,1)],[robot_CC(i-1,2),robot_CC(i,2)],'-o','Color','r', 'LineWidth', 1.5, 'Tag', "AnimPiece");
         end
 
+        end_effectors(k,:) = robot_CC(n_joints+1,:);
 
-        
-
-
-        pause(0); %change this to make the animation faster/slower
+        % draws the path from the end effector array
+        if drawPath == true
+            for j=1:3:k
+                plot(axes,end_effectors(j,1),end_effectors(j,2),'.','Color','b');
+            end
+        end
     end
-    
 end
 
