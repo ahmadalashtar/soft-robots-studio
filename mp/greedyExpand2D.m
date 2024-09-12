@@ -42,7 +42,7 @@ function config = greedyExpand2D(sp, config, goal)
             end
             config(lastExpanded, 1) = config(lastExpanded, 1) + angleAmount;
         else
-            config = retract(config, -retAmount);
+            config = retract(sp, config, -retAmount);
         end
     elseif ~isequal(diffAngles, zeros(lastExpanded, 1))
         %Steering
