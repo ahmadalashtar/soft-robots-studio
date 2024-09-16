@@ -24,9 +24,17 @@ Authors:
   <li>E. Demirel (GUI, wrapper)</li>
   <li>O. Nurcan (GUI, wrapper)</li>
   </ul>
-Contant Info:
+
+Contact Info:
 <ul>
   <li>F. Stroppa (fabio.stroppa@khas.edu.tr)</li>
   <li>A. Alashtar (ahmadalashtar@stu.khas.edu.tr)</li>
    </ul>
+
+Tutorial Videos:
+<ul>
+  <li>Optimizer Tutorial: www.youtube.com/watch?v=uFGCcHr7qEM</li>
+  <li>Motion Planner Tutorial: www.youtube.com/watch?v=1NN-JhD4Czs</li>
+    </ul>
+
 Reference: F. Stroppa. Design Optimizer for Planar Soft-Growing Robot Manipulators. In Elsevier Engineering Applications of Artificial Intelligence, Volume 130, 2024. (<a href="https://www.sciencedirect.com/science/article/pii/S0952197623018778">URL</a>) (<a href="https://arxiv.org/abs/2310.03374">ArXiv</a>)
