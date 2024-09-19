@@ -17,7 +17,7 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
         final_angle = chrom(i,n_nodes+2);
         last_link_length = chrom(i,n_nodes+4);
 
-        g = zeros(1,5);     % array of penalty terms for each constraint
+        g = zeros(1,6);     % array of penalty terms for each constraint
         beta = 1;           % parameter of penalty method
 
         %--CONSTRAINT 1,2: final angle is between angle bounds
@@ -43,8 +43,8 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
         for j=1:1:ee_index-1           
             p_start = robot_points(j,:);
             p_end = robot_points(j+1,:);
-            link_length = norm(p_end-p_start);                
-            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1), op.obstacles);  
+            l_length = norm(p_end-p_start);                
+            nearby_obstacles = findNearbyObstacles(p_start,l_length,op.length_domain(1), op.obstacles);  
             n_nearby_obstacles = size(nearby_obstacles,2);
             for z=1:1:n_nearby_obstacles
                 if intersectObstacle_2D([p_start; p_end],op.obstacles(nearby_obstacles(z),:),false)
@@ -68,7 +68,53 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
             g(5)=1;
         end
 
-     
+        %--CONSTRAINT 6: all links are far from an obstacle directly infront of it
+
+        % this constraint is needed because when an obstacle is right
+        % infront of a link, and its not a sufficient distance far (minimum
+        % length amount), it will collide before being able to grow the
+        % minimum length.
+
+        intersectionsN = 0;
+
+        for j = 1:1:ee_index-1
+            
+            l_vector = robot_points(j+1,:) - robot_points(j,:);
+            l_length = norm(l_vector);
+            l_angle = atan2(l_vector(2), l_vector(1));
+            
+            if j < ee_index-1
+                n_vector = robot_points(j+2,:) - robot_points(j+1,:);
+                n_angle = atan2(n_vector(2), n_vector(1));
+            else
+                n_angle = l_angle;
+            end
+
+            min_angleN = min(l_angle, n_angle);
+            max_angleN = max(l_angle, n_angle);
+
+            nearby_obstacles = findNearbyObstacles(robot_points(j,:), l_length, op.length_domain(1), op.obstacles);
+            n_nearby_obstacles = size(nearby_obstacles, 2);
+
+            for z = 1:1:n_nearby_obstacles
+                o_pos = op.obstacles(nearby_obstacles(z), 1:2); 
+                o_vector = o_pos - robot_points(j,:);
+                o_distance = norm(o_vector);
+                o_angle = atan2(o_vector(2), o_vector(1));
+
+                if min_angleN < 0
+                    min_angleN = min_angleN + 2*pi;
+                    max_angleN = max_angleN + 2*pi;
+                    o_angle = mod(o_angle + 2*pi, 2*pi);
+                end
+
+                if o_angle >= min_angleN && o_angle <= max_angleN && o_distance < min_length
+                    intersectionsN = intersectionsN + 1;
+                end
+            end
+        end
+
+        g(6) = intersectionsN;
 
         if(g(4) ~= 0)
             switch algorithm
@@ -83,6 +129,15 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
 %            gas.infeasible_running_stats(3) = gas.infeasible_running_stats(3) + (intersections - gas.infeasible_running_stats(1)) * (intersections - nextM);
 %            gas.infeasible_running_stats(1) = nextM;
 
+        end
+
+        if(g(6) ~= 0)
+            switch algorithm
+                case 'ga'
+                    gas.infeasible_subcount = gas.infeasible_subcount+intersectionsN;
+                case 'bbbc'
+                    bbbcs.infeasible_subcount = bbbcs.infeasible_subcount+intersectionsN;
+            end
         end
         
         gScalar = gScalar + g*r';
