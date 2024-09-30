@@ -8,11 +8,13 @@ function sendOutputFromScript2GUI(app,message,configurations,feasible)
         'configurations',configurations,'obstacles', app.op.obstacles,'targets',app.op.targets,'base',app.op.home_base);
     message = string(message )+ string(strResult);
     node = uitreenode(app.OPTree,"Text",string(message));
+    node.NodeData = data;
     if feasible
         node.Icon = "Green-Tick.svg";
+        node.NodeData.feasible = true;
     else
         node.Icon = "Red-Cross.png";
+        node.NodeData.feasible = false;
     end
-    node.NodeData = data;
     app.OPTree.scroll("bottom")
 end
