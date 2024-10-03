@@ -98,7 +98,23 @@ function [gScalar] = calculateStaticPenalty(chrom, r)
                 
                 angleB = atand(abs(robot_points(j,2)-o_pos(2))/abs(robot_points(j,1)-o_pos(1)));
 
-                if angleB <= angleA && angleB >= 0 && o_distance < min_length
+                angle2Apply = deg2rad(angleB + 90);
+
+                x_offset = op.obstacles(nearby_obstacles(z), 3) * cos(angle2Apply);
+                y_offset = op.obstacles(nearby_obstacles(z), 3) * sin(angle2Apply);
+
+                o_corner1 = o_pos + [x_offset, y_offset];
+                angleC = atand(abs(robot_points(j,2)-o_corner1(2))/abs(robot_points(j,1)-o_corner1(1)));
+
+                angle2Apply = deg2rad(angleB - 90);
+
+                x_offset = op.obstacles(nearby_obstacles(z), 3) * cos(angle2Apply);
+                y_offset = op.obstacles(nearby_obstacles(z), 3) * sin(angle2Apply);
+
+                o_corner2 = o_pos + [x_offset, y_offset];
+                angleD = atand(abs(robot_points(j,2)-o_corner2(2))/abs(robot_points(j,1)-o_corner2(1)));
+
+                if o_distance < min_length && ((angleA < angleC && angleA > angleB) || (angleA > angleC && angleA < angleB)) && ((0 < angleC && 0 > angleD) || (0 > angleC && 0 < angleD))
                     intersectionsN = intersectionsN + 1;
                 end
             end
