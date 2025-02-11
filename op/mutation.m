@@ -110,6 +110,12 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles, robotMode)
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
+                        case "Carry Robot"
+                            if targetsRObstacles
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                            else
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
+                            end
                     end
 
                     angle = max(min(bounds_angle(2), angle), bounds_angle(1));
@@ -140,6 +146,12 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles, robotMode)
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
                         case "Collect Robot"
+                            if targetsRObstacles
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                            else
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
+                            end
+                        case "Carry Robot"
                             if targetsRObstacles
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
                             else

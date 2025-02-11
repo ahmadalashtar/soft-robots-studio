@@ -151,6 +151,8 @@ function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObsta
                             angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, tempObsNTargets, angle_bound, false);
                         case "Collect Robot"
                             angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, op.carriable_o_n_t(i, :, :), angle_bound, false);
+                        case "Carry Robot"
+                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, op.carriable_o_n_t(i, :, :), angle_bound, false);
                     end
                 else
                     angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, op.obstacles, angle_bound, false);
