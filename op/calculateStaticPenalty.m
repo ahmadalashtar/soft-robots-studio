@@ -90,7 +90,7 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                                 intersections = intersections + 1;
                             end
                         end
-                    case "Carry Robot"
+                    case "Collect Robot"
                         nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.carriable_o_n_t(i,:,:));  
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles

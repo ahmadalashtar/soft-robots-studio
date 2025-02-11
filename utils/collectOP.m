@@ -4,7 +4,7 @@ function collectOP(app)
     create_obstacles_variable(app);
     if app.TargetCollisionCheckBox.Value
         create_targets_obstacles_variable(app);
-        if app.RobotModeDropDown.Value == "Carry Robot"
+        if app.RobotModeDropDown.Value == "Carry Robot" || app.RobotModeDropDown.Value == "Collect Robot"
             create_carry_targets_obstacles_variable(app);
         end
     end
