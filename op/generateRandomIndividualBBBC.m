@@ -75,13 +75,19 @@ function [indv] =  generateRandomIndividualBBBC(cMass, gen, targetsRObstacles, r
                             else
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179, 180], false, gen, cMass, i, j);
                             end
-                        case "Collect Robot"
+                        case "Pick & Collect Robot"
                             if targetsRObstacles
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), [-179, 180], false, gen, cMass, i, j);
                             else
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179, 180], false, gen, cMass, i, j);
                             end
-                        case "Carry Robot"
+                        case "Pick & Place Robot"
+                            if targetsRObstacles
+                                angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), [-179, 180], false, gen, cMass, i, j);
+                            else
+                                angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179, 180], false, gen, cMass, i, j);
+                            end
+                        case "Carry & Drop Robot"
                             if targetsRObstacles
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), [-179, 180], false, gen, cMass, i, j);
                             else

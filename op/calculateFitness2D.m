@@ -178,6 +178,10 @@ function [chrom, fitness] = calculateFitness2D(chrom, draw_plot)
     fitness(4) = sumLinksOnSegment; %/ n_targets;   
     fitness(5) = totLength;
     
+    if any(isnan(chrom(:)))
+        disp('NaN detected in chrom!');
+    end
+
     if draw_plot==true
         configurations = decodeIndividual(chrom); 
         drawProblem2D(configurations);
@@ -255,7 +259,7 @@ function [dist_mat, ee_index] = calculateMinDistance_FromOrientationSegment(robo
     dist_mat(:,1) = abs(dist_mat(:,1)); % go back to having distances all positive (euclidean distances are positive!)
     
     [m,ee_index] = min(dist_mat(:,1));
-    if ee_index == 1    
+    if ee_index == 1
         ee_index = 2;   % in case the closest point turns out to be the robot base, go one further; this configuration is going to be probably infeasible due to the last angle anyways
     end
     dist_mat = dist_mat(1:ee_index,:);  % cut all nodes after the minimum (it means the robot will not stop grow in that direction from now on)

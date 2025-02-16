@@ -42,9 +42,9 @@ function [robot_config_P] = solveForwardKinematics2D(robot_config_AL, home_base,
         
         ee = [(ee(1)-node(1))*cos(alpha) - (ee(2)-node(2))*sin(alpha) , (ee(1)-node(1))*sin(alpha) + (ee(2)-node(2))*cos(alpha)]+node;  % apply rotation      
        
-        
         % recalculation of the unit vector
-        mod = sqrt((ee(1)-node(1))^2 + (ee(2)-node(2))^2);        
+        mod = sqrt((ee(1)-node(1))^2 + (ee(2)-node(2))^2);  
+
         unitVector(1) = (ee(1) - node(1)) / mod;
         unitVector(2) = (ee(2) - node(2)) / mod;       
         

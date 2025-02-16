@@ -92,7 +92,7 @@ function [child] = blendCrossover(p1, p2, alpha)
     
     %lengths (+1 x nodes) last 4 is empty
     for j=1:1:op.n_nodes
-        child(ll_index,j) = blendValues(p1(ll_index,j),p1(ll_index,j),alpha,op.length_domain,false);
+        child(ll_index,j) = blendValues(p1(ll_index,j),p2(ll_index,j),alpha,op.length_domain,false);
     end
 end
 
@@ -113,6 +113,10 @@ function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObsta
 
     %angles (targets x nodes+4)
     %lengths (+1 x nodes) last 4 is empty
+    for j=1:1:op.n_nodes
+        child(ll_index,j) = blendValues(p1(ll_index,j),p2(ll_index,j),alpha,op.length_domain,false);
+    end
+
     if targetsRObstacles && robotMode == "Vacuum Robot"
         tempObsNTargets = op.obstacles_n_targets;
     end
@@ -149,10 +153,12 @@ function [child] = blendCrossover_obstacleAvoidance(p1, p2, alpha, targetsRObsta
                         case "Vacuum Robot"
                             tempObsNTargets(size(op.obstacles,1) + i, :) = [0, 0, 0];
                             angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, tempObsNTargets, angle_bound, false);
-                        case "Collect Robot"
+                        case "Pick & Collect Robot"
                             angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, op.carriable_o_n_t(i, :, :), angle_bound, false);
-                        case "Carry Robot"
+                        case "Pick & Place Robot"
                             angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, op.carriable_o_n_t(i, :, :), angle_bound, false);
+                        case "Carry & Drop Robot"
+                            angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                     end
                 else
                     angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, child(ll_index, j), op.length_domain, op.obstacles, angle_bound, false);

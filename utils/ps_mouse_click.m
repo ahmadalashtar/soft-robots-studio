@@ -10,7 +10,7 @@ function ps_mouse_click(app, src)
 
         % Delete collCirc if it exists
         if isfield(app.Tree.SelectedNodes.NodeData, 'collCirc') && ishandle(app.Tree.SelectedNodes.NodeData.collCirc)
-            delete(app.Tree.SelectedNodes.NodeData.collCirc);
+            %delete(app.Tree.SelectedNodes.NodeData.collCirc);
         end
 
         src.Selected = "off";
