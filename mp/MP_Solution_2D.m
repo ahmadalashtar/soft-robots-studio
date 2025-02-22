@@ -9,40 +9,10 @@ sp.heuristicLimit = 0.1;
 
 startTime = clock;
 [solution] = MP_searchAlgorithmV3(sp);
-[path, cost] = directExpansion2D(sp, realmax, sp.start_conf, sp.goal_conf);
-solution.path = pathConversion1_2D(solution.path);
+
 
 endTime = clock;
 
-totalTime = endTime - startTime;
 
-if isempty(solution)
-    result = [];
-    return;
-end
-
-% Calculate the number of submatrices you will create
-numSubMatrices = size(solution.path, 2) / 2;
-
-% Preallocate the 3D array to store the submatrices
-formattedPathForAnimation = zeros(sp.j, 2, numSubMatrices);
-
-
-
-
-% Extract the submatrices and store them in the 3D array
-for i = 1:numSubMatrices
-    formattedPathForAnimation(:, :, i) = solution.path(:, (i-1)*2 + 1 : i*2);
-end
-
-growthCount = 0;
-retractCount = 0;
-steerCount = 0;
-for i=2:size(formattedPathForAnimation,3)
-    [growthCount, retractCount, steerCount] = MP_actionCounter_2D(formattedPathForAnimation(:, :, i), formattedPathForAnimation(:, :, i-1), growthCount, retractCount, steerCount);
-end
-
-result  = formattedPathForAnimation;
-
-
+result  = solution.path;
 end

@@ -78,11 +78,11 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles, robotMode)
                                 tempObsNTargets(n_obstacles + i, :) = [0, 0, 0];
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, op.angle_domain, false);
                             case "Pick & Collect Robot"
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), op.angle_domain, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
                             case "Pick & Place Robot"
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), op.angle_domain, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
                             case "Carry & Drop Robot"
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.carriable_o_n_t(i, :, :), op.angle_domain, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
                         end
                     else
                         angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);

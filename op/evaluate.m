@@ -16,7 +16,7 @@ function [pop, fit_array] = evaluate(pop, targetsRObstacles, robotMode)
             fit_array = zeros(gas.n_individuals,length(fieldnames(gas.fitIdx)));
 
             for i=1:gas.n_individuals 
-                [pop(:,:,i), fitness] = calculateFitness2D(pop(:,:,i), false);
+                [pop(:,:,i), fitness] = calculateFitness2D(pop(:,:,i), false, targetsRObstacles);
                 % place the right data in fit_array
                 fit_array(i,gas.fitIdx.ik) = round(fitness(1),3);    % ik
                 fit_array(i,gas.fitIdx.nodes) = fitness(2); % nodes
@@ -35,7 +35,7 @@ function [pop, fit_array] = evaluate(pop, targetsRObstacles, robotMode)
             fit_array = zeros(bbbcs.N,length(fieldnames(bbbcs.fitIdx)));
 
             for i=1:bbbcs.N 
-                [pop(:,:,i), fitness] = calculateFitness2D(pop(:,:,i), false);
+                [pop(:,:,i), fitness] = calculateFitness2D(pop(:,:,i), false, targetsRObstacles);
                 
                 % place the right data in fit_array
                 fit_array(i,bbbcs.fitIdx.ik) = round(fitness(1),3);    % ik

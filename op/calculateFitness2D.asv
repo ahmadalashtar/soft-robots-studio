@@ -56,9 +56,7 @@ function [chrom, fitness] = calculateFitness2D(chrom, draw_plot, targetsRObstacl
     for i=1:1:n_targets
         t = zeros(1,4);
         if targetsRObstacles
-            a = circleSegmentIntersection(op.targets(i,:), op.end_points(i,:));
-            t(1) = a(1);
-            t(2) = a(2);
+            [t(1), t(2)] = circleSegmentIntersection(op.targets(i,:), op.);
             t(3) = op.targets(i,3);
             t(4) = op.targets(i,4);
         else
@@ -78,7 +76,7 @@ function [chrom, fitness] = calculateFitness2D(chrom, draw_plot, targetsRObstacl
         
         %----CALCULATE MIN DISTANCE FROM ROBOT TO TARGET'S ORIENTATION SEGMENT AND LAST ANGLE
         robot_points = solveForwardKinematics2D(conf,op.home_base,false);
-        [dist_mat, ee_index] = calculateMinDistance_FromOrientationSegment(robot_points,[t(1:2);op.end_points(i,:)]);
+        [dist_mat, ee_index] = calculateMinDistance_FromOrientationSegment(robot_points,[op.targets(i,1:2);op.end_points(i,:)]);
         chrom(i,n_nodes+1) = ee_index;  % this is the index of the closest node to the target's orientation segment
         sumLinks = sumLinks + chrom(i,n_nodes+1)-1;
         
@@ -151,7 +149,7 @@ function [chrom, fitness] = calculateFitness2D(chrom, draw_plot, targetsRObstacl
         
         fitness(1) = fitness(1) + fit;
 
-        final_angle = calculateLastAngle(robot_points, ee_index, t(1:2));
+        final_angle = calculateLastAngle(robot_points, ee_index, op.targets(i,1:2));
         chrom(i,n_nodes+2) = final_angle;   % thixs is the angle to align the robot to the target's orientation segment
         
         

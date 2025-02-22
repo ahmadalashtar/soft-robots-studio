@@ -1,4 +1,4 @@
-function mouseClickInMP(app, src, tree)
+function total = mouseClickInMP(app, src, tree, total)
     node = app.MPTree.SelectedNodes;
     if ~tree  
         x = src.UserData.x;
@@ -30,7 +30,10 @@ function mouseClickInMP(app, src, tree)
             for to = 1 : numel(targetsAndBase(:,1))
                 if round(x,3) == round(targetsAndBase(to,1),3) && round(y,3) == round(targetsAndBase(to,2),3)
                     app.MPRunning = true;
-                        MP_softRobot_animation_2D(app,node.NodeData.paths{from}{to},node.NodeData.base, true, node.NodeData.obstacles, app.UIAxes2,secondsToPause)
+                        speed = app.SpeedperFrame1secto0secSlider.Value;
+                        secondsToPause = (100-speed)/100;
+                        animate_2D(app.sp,node.NodeData.paths{from}{to}, [250, 250], secondsToPause, app.UIAxes2);
+                        total = total + costOfPath_tip_2D(app.sp, node.NodeData.paths{from}{to});
                     break;
                 end
             end

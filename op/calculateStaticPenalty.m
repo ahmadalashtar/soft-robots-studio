@@ -91,7 +91,7 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                             end
                         end
                     case "Pick & Collect Robot"
-                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.carriable_o_n_t(i,:,:));  
+                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));  
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles
                             if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0
@@ -102,7 +102,7 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                             end
                         end
                     case "Pick & Place Robot"
-                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.carriable_o_n_t(i,:,:));  
+                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));  
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles
                             if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0
@@ -113,7 +113,7 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                             end
                         end
                     case "Carry & Drop Robot"
-                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.carriable_o_n_t(i,:,:));  
+                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));  
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles
                             if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0

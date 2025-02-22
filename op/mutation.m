@@ -106,19 +106,19 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles, robotMode)
                             end
                         case "Pick & Collect Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
                         case "Pick & Place Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
                         case "Carry & Drop Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
@@ -153,19 +153,19 @@ function [chrom] = modifiedRandomMutation(chrom, targetsRObstacles, robotMode)
                             end
                         case "Pick & Collect Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
                         case "Pick & Place Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
                         case "Carry & Drop Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.carriable_o_n_t, angle_bound, false);
+                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, squeeze(op.carriable_o_n_t(i, :, :)), angle_bound, false);
                             else
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, chrom(ll_index, j), bounds_length, op.obstacles, angle_bound, false);
                             end
