@@ -51,6 +51,9 @@ function [indv] =  generateRandomIndividualBBBC(cMass, gen, targetsRObstacles, r
     
     for i = 1:n_targets
         end_effector = op.home_base(1:2);
+        if targetsRObstacles && (robotMode == "Pick & Collect Robot" || robotMode == "Pick & Place Robot" || robotMode == "Carry & Drop Robot")
+            end_effector = end_effector + (op.targets(i,4) * op.home_base(3));
+        end
         robot_orientation = [1, 0];
         robot = zeros(1, n_nodes + 4);
         
@@ -77,19 +80,31 @@ function [indv] =  generateRandomIndividualBBBC(cMass, gen, targetsRObstacles, r
                             end
                         case "Pick & Collect Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), [-179, 180], false, gen, cMass, i, j);
+                                if ~isempty(op.carriable_o_n_t)
+                                    angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), [-179, 180], false, gen, cMass, i, j);
+                                else
+                                    angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, [], [-179, 180], false, gen, cMass, i, j);
+                                end
                             else
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179, 180], false, gen, cMass, i, j);
                             end
                         case "Pick & Place Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), [-179, 180], false, gen, cMass, i, j);
+                                if ~isempty(op.carriable_o_n_t)
+                                    angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), [-179, 180], false, gen, cMass, i, j);
+                                else
+                                    angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, [], [-179, 180], false, gen, cMass, i, j);
+                                end
                             else
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179, 180], false, gen, cMass, i, j);
                             end
                         case "Carry & Drop Robot"
                             if targetsRObstacles
-                                angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), [-179, 180], false, gen, cMass, i, j);
+                                if ~isempty(op.carriable_o_n_t)
+                                    angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), [-179, 180], false, gen, cMass, i, j);
+                                else
+                                    angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, [], [-179, 180], false, gen, cMass, i, j);
+                                end
                             else
                                 angle = getRandomAngleAvoidingObstaclesWithCenterOfMass(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, [-179, 180], false, gen, cMass, i, j);
                             end

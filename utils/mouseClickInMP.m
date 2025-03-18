@@ -1,4 +1,4 @@
-function total = mouseClickInMP(app, src, tree, total)
+function mouseClickInMP(app, src, tree, total)
     node = app.MPTree.SelectedNodes;
     if ~tree  
         x = src.UserData.x;
@@ -32,8 +32,7 @@ function total = mouseClickInMP(app, src, tree, total)
                     app.MPRunning = true;
                         speed = app.SpeedperFrame1secto0secSlider.Value;
                         secondsToPause = (100-speed)/100;
-                        animate_2D(app.sp,node.NodeData.paths{from}{to}, [250, 250], secondsToPause, app.UIAxes2);
-                        total = total + costOfPath_tip_2D(app.sp, node.NodeData.paths{from}{to});
+                        animate_2D(app, app.sp,node.NodeData.paths{from}{to}, [250, 250], secondsToPause, app.UIAxes2);
                     break;
                 end
             end

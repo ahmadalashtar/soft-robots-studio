@@ -1,4 +1,4 @@
-function [] = animate_2D(app, sp, path, dim, pace, f, skipIndex, reverseOrder)
+function [] = animate_2D_noReset(app, sp, path, dim, pace, f, skipIndex, reverseOrder)
     arguments
         app
         sp
@@ -9,10 +9,6 @@ function [] = animate_2D(app, sp, path, dim, pace, f, skipIndex, reverseOrder)
         skipIndex = -1;
         reverseOrder = [];
     end
-
-    cla(f);
-    drawTargetsObstaclesBaseinMP(app, skipIndex, reverseOrder);
-    draw_segments_MP(app,f,app.MPTree.SelectedNodes, skipIndex, reverseOrder);
 
     % Draw first and last configuration.
     startColor = 'r';

@@ -11,22 +11,17 @@ function  [x1,y1,x2,y2, x3,y3,x4,y4 ] = drawMinMaxCoordinates(app)
     yTenPercent = yLength/10;
     xTenPercent = xLength/10;
     
+    
     min = app.MinlengthEditField.Value;
     max = app.MaxlengthEditField.Value;
 
-    % Shift everything down by 50% of the Y range
-    yShift = yLength / 2;
-
     % Define the coordinates of the line
-    x1 = [xLimLeft + xTenPercent/2, xLimLeft + xTenPercent/2 + max];
-    y1 = [yLimUp - yTenPercent/2 - yShift, yLimUp - yTenPercent/2 - yShift];
-    
-    x2 = [xLimLeft + xTenPercent/2, xLimLeft + xTenPercent/2 + min];
-    y2 = [yLimUp - 7*yTenPercent/10 - yShift, yLimUp - 7*yTenPercent/10 - yShift];
-
-    x3 = [xLimLeft, xLimLeft + xTenPercent/2];
-    y3 = [yLimUp - yTenPercent/2 - yShift, yLimUp - yTenPercent/2 - yShift];
-
-    x4 = [xLimLeft, xLimLeft + xTenPercent/2];
-    y4 = [yLimUp - 7*yTenPercent/10 - yShift, yLimUp - 7*yTenPercent/10 - yShift];
+    x1 = [xLimLeft+xTenPercent/2, xLimLeft+xTenPercent/2+max];
+    y1 = [yLimUp-yTenPercent/2, yLimUp-yTenPercent/2];
+    x2 = [xLimLeft+xTenPercent/2, xLimLeft+xTenPercent/2+min];
+    y2 = [yLimUp-7*yTenPercent/10, yLimUp-7*yTenPercent/10];
+    x3 = [xLimLeft, xLimLeft+xTenPercent/2];
+    y3=[yLimUp-yTenPercent/2, yLimUp-yTenPercent/2];
+    x4=[xLimLeft, xLimLeft+xTenPercent/2];
+    y4=[yLimUp-7*yTenPercent/10, yLimUp-7*yTenPercent/10];
 end

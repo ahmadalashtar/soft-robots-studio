@@ -59,5 +59,8 @@ function create_carry_targets_obstacles_variable(app)
             end
         end
     end
+    if size(ot_v, 1) == 1 && size(ot_v, 2) == 1 && size(ot_v, 3) == 3
+        ot_v = [];
+    end
     app.op.carriable_o_n_t = ot_v;
 end

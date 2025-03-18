@@ -47,7 +47,13 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
         for j=1:1:ee_index-1           
             p_start = robot_points(j,:);
             p_end = robot_points(j+1,:);
-            link_length = norm(p_end-p_start);      
+            link_length = norm(p_end-p_start);
+            if targetsRObstacles && (robotMode == "Pick & Collect Robot" || robotMode == "Pick & Place Robot" || robotMode == "Carry & Drop Robot")
+                rad = op.targets(i, 4);
+                dire = (p_end - p_start)/link_length;
+                p_end = p_end + dire * rad;
+            end
+
             % if targetsRObstacles == true
             % 
             %     obstacles_n_targets = zeros(size(op.obstacles, 1) + n_targets-1, 3);
@@ -91,7 +97,12 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                             end
                         end
                     case "Pick & Collect Robot"
-                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));  
+                        if ~isempty(op.carriable_o_n_t)
+                            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));
+                        else
+                            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.obstacles);
+                        end
+                        
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles
                             if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0
@@ -102,7 +113,11 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                             end
                         end
                     case "Pick & Place Robot"
-                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));  
+                        if ~isempty(op.carriable_o_n_t)
+                            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));
+                        else
+                            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.obstacles);
+                        end
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles
                             if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0
@@ -113,7 +128,11 @@ function [gScalar] = calculateStaticPenalty(chrom, r, targetsRObstacles, robotMo
                             end
                         end
                     case "Carry & Drop Robot"
-                        nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));  
+                        if ~isempty(op.carriable_o_n_t)
+                            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), squeeze(op.carriable_o_n_t(i, :, :)));
+                        else
+                            nearby_obstacles = findNearbyObstacles(p_start,link_length,op.length_domain(1) + op.targets(i,4), op.obstacles);
+                        end
                         n_nearby_obstacles = size(nearby_obstacles,2);
                         for z=1:1:n_nearby_obstacles
                             if op.carriable_o_n_t(i,nearby_obstacles(z),3) == 0

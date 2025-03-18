@@ -60,6 +60,9 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles, robotMode)
 
     for i = 1:n_targets
         end_effector = op.home_base(1:2);
+        if targetsRObstacles && (robotMode == "Pick & Collect Robot" || robotMode == "Pick & Place Robot" || robotMode == "Carry & Drop Robot")
+            end_effector = end_effector + (op.targets(i,4) * op.home_base(3));
+        end
         robot_orientation = [1, 0];
         robot = zeros(1, n_nodes + 4);
 
@@ -78,11 +81,23 @@ function [chrom] =  generateRandomChromosome(targetsRObstacles, robotMode)
                                 tempObsNTargets(n_obstacles + i, :) = [0, 0, 0];
                                 angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, tempObsNTargets, op.angle_domain, false);
                             case "Pick & Collect Robot"
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
+                                if ~isempty(op.carriable_o_n_t)
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
+                                else
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, [], op.angle_domain, false);
+                                end
                             case "Pick & Place Robot"
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
+                                if ~isempty(op.carriable_o_n_t(i, :, :))
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
+                                else
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, [], op.angle_domain, false);
+                                end
                             case "Carry & Drop Robot"
-                                angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
+                                if ~isempty(op.carriable_o_n_t(i, :, :))
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, squeeze(op.carriable_o_n_t(i, :, :)), op.angle_domain, false);
+                                else
+                                    angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j) + op.targets(i,4), op.length_domain, [], op.angle_domain, false);
+                                end
                         end
                     else
                         angle = getRandomAngleAvoidingObstacles(end_effector, robot_orientation, lengths(j), op.length_domain, op.obstacles, op.angle_domain, false);

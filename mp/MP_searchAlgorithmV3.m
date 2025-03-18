@@ -49,15 +49,7 @@ function solution = MP_searchAlgorithmV3(sp)
     [retPath, ~] = directExpansion2D(sp, realmax, sp.start_conf, retConfig);
 
     if isempty(retPath)
-    solution.path = {[
-        0, 5;
-        0, 5;
-        0, 5;
-        -0, 5;
-        5, 5;
-        0, 0
-    ]};
-    return;
+
     end
     retConfig = retPath{end};
     path = directExpansion2D(spMod, realmax, retConfig, growConfig);
