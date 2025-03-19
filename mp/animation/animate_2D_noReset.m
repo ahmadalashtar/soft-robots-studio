@@ -22,9 +22,9 @@ function [] = animate_2D_noReset(app, sp, path, dim, pace, f, skipIndex, reverse
     robotColor = 'b';
     traceColor = 'b';
     robotHandle = plotRobot([], [0, 0], robotColor, f);
-    targetHandle = [];
     direction = [1,0];
     subtraction = [1,0];
+    targetHandle = [];
     for i = 1:size(path, 2)
         robotCartasian = MP_solveForwardKinematics2D(path{i}, sp.home_base, false);
         plotRobot(robotHandle, robotCartasian, robotColor, f);
@@ -75,6 +75,11 @@ function [] = animate_2D_noReset(app, sp, path, dim, pace, f, skipIndex, reverse
         end
 
         pause(pace);
+    end
+    if ~isempty(targetHandle)
+        delete(targetHandle);
+        delete(collCirc);
+        delete(app.MPTree.SelectedNodes.NodeData.collCirc);
     end
 end
 

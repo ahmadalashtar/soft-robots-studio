@@ -80,6 +80,11 @@ function [] = animate_2D(app, sp, path, dim, pace, f, skipIndex, reverseOrder)
 
         pause(pace);
     end
+    if ~isempty(targetHandle)
+        delete(targetHandle);
+        delete(collCirc);
+        delete(app.MPTree.SelectedNodes.NodeData.collCirc);
+    end
 end
 
 function plotRectangleCentered(x, y, width, color, f)
