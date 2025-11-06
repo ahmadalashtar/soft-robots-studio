@@ -9,7 +9,7 @@
 % OUTPUT:
 % 'robot_config_P' is a robot configuration represented as coordinates of each node in the plane
 function [robot_config_P] = solveForwardKinematics2D(robot_config_AL, home_base, draw_plot)    
-
+    global op;
     n_nodes = size(robot_config_AL,1); % number of nodes (links of the robot - 1)
 
     unitVector_start = [cos(deg2rad(home_base(3))),sin(deg2rad(home_base(3)))];
@@ -33,7 +33,11 @@ function [robot_config_P] = solveForwardKinematics2D(robot_config_AL, home_base,
         % for each node of the robot
         alpha = deg2rad(robot_config_AL(j,1)); % first element of the array is an angle (in degrees)
         linkLength = robot_config_AL(j,2);     % second element of the array length (in metric units)
-        
+
+        if op.materialLoss
+            linkLength = getLengthWithMaterialLoss(alpha, 0, linkLength, op.robotRad); % I do not know what the radius of the robot's body is.
+        end
+
         % translation + rotation ('ee' would be the end effector of the robot, grows at each node)
         ee = node+unitVector*linkLength; % translation   
        
