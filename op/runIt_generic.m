@@ -43,6 +43,8 @@ function [best_chrom, configurations] = runIt_generic(app)
     %---------------------PROBLEM DEFINITION---------------------  
     
     global op;          % optimization problem
+    op.materialLoss = app.op.materialLoss;
+    op.robotRad = app.op.robotRad;
 
     % op.home_base = [0 0 0];
     % 

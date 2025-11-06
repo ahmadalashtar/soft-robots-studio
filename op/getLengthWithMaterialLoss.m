@@ -10,7 +10,7 @@
 % Returns:
 %   length          - length after material loss
 function length = getLengthWithMaterialLoss(angle_x, angle_y, link_length, radius)
-    length = getBendLength(abs(angle_y), getBendLength(abs(angle_x), link_length, radius, true), radius, true);
+    length = getBendLength(abs(angle_y), getBendLength(abs(angle_x), link_length, radius, false), radius, false);
 
 end
 
