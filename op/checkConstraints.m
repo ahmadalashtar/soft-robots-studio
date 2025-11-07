@@ -18,7 +18,7 @@ function [fit_array] = checkConstraints(pop, fit_array,targetsRObstacles, robotM
                 case 'static'
                     for i=1:gas.n_individuals
                         index = fit_array(i,gas.fitIdx.id);
-                        fit_array(i,gas.fitIdx.pen) = calculateStaticPenalty(pop(:,:,index),[10 10 10 100 10], targetsRObstacles, robotMode);
+                        fit_array(i,gas.fitIdx.pen) = calculateStaticPenalty(pop(:,:,index),[10 10 10 100 10 10], targetsRObstacles, robotMode);
                         if gas.ranking_method == "penalty"
                             fit_array(i,gas.fitIdx.ik) = fit_array(i,gas.fitIdx.ik) + fit_array(i,gas.fitIdx.pen);
                         end
@@ -37,7 +37,7 @@ function [fit_array] = checkConstraints(pop, fit_array,targetsRObstacles, robotM
                 case 'static'
                     for i=1:bbbcs.N
                         index = fit_array(i,bbbcs.fitIdx.id);
-                        fit_array(i,bbbcs.fitIdx.pen) = calculateStaticPenalty(pop(:,:,index),[10 10 10 100 10], targetsRObstacles, robotMode);
+                        fit_array(i,bbbcs.fitIdx.pen) = calculateStaticPenalty(pop(:,:,index),[10 10 10 100 10 10], targetsRObstacles, robotMode);
                         if bbbcs.ranking_method == "penalty"
                             fit_array(i,bbbcs.fitIdx.ik) = fit_array(i,bbbcs.fitIdx.ik) + fit_array(i,bbbcs.fitIdx.pen);
                         end
