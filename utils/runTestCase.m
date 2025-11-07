@@ -10,10 +10,10 @@ function runTestCase(app,task)
         case 1
             % multiple targets and scattered obstacles
             app.op.targets = [
-                100 45 45;
-                120 40 30;
-                100 -30 10;
-                100 -50 -45;
+                100 45 45 1;
+                120 40 30 1;
+                100 -30 10 1;
+                100 -50 -45 1;
                 ];
             app.op.obstacles = [
                 50 20 10;
@@ -26,9 +26,9 @@ function runTestCase(app,task)
         case 2
             % multiple targets and brick
             app.op.targets = [
-                200 0 0;
-                100 100 90;
-                170.71 70.71 45;
+                200 0 0 1;
+                100 100 90 1;
+                170.71 70.71 45 1;
                 ];
 
             app.op.obstacles = [
@@ -42,7 +42,7 @@ function runTestCase(app,task)
         case 3
             % single target and vertical wall
             app.op.targets = [
-                120 0 -90;
+                120 0 -90 1;
                 ];
             app.op.obstacles = [
                 120 100 10;
@@ -62,7 +62,7 @@ function runTestCase(app,task)
             xval = 40;
             app.op.home_base = [0 0 0];
             app.op.targets = [
-                300 0 0;
+                300 0 0 1;
                 ];
             app.op.obstacles = [
                 xval -20 radius;
@@ -96,8 +96,8 @@ function runTestCase(app,task)
             % discussion over preference-based method and what best means in terms of the user
             % also mention that we experimented with different order for objectives and we observed that having nodes before ondulation is the best option
             app.op.targets = [
-                120 80 70;
-                150 80 70;
+                120 80 70 1;
+                150 80 70 1;
                 ];
             app.op.obstacles = [
 
