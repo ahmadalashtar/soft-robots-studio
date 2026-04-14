@@ -28,7 +28,7 @@ Authors:
 Contact Info:
 <ul>
   <li>F. Stroppa (fabio.stroppa@khas.edu.tr)</li>
-  <li>A. Alashtar (ahmadalashtar@stu.khas.edu.tr)</li>
+  <li>A. Alashtar (ahmet.astar@altinay.com)</li>
    </ul>
 
 Tutorial Videos:
